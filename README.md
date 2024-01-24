@@ -44,7 +44,7 @@ dataset.generate_video(0, "example", 240)
 
 This produces the following video (stored in the file `example.mp4`):
 
-![Example of simulation video](examples/example.gif)
+<img src="examples/example.gif" alt="Example of simulation video" width="40%"/>
 
 ## Documentation
 Basic help is provided for each class and function, and is accessible via the Python `help()` function.
