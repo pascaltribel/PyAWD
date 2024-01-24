@@ -33,7 +33,7 @@ dataset.plot_item(0)
 ```
 
 Which outputs the following figure:
-[Example of simulation output](examples/example.png)
+![Example of simulation output](examples/example.png)
 
 Finally, we can generate a video of this simulation. We will use $240$ frames, so that we have a final rate of $24 fps$:
 
