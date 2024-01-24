@@ -44,10 +44,7 @@ dataset.generate_video(0, "example", 240)
 
 This produces the following video (stored in the file `example.mp4`):
 
-
-<video width="320" height="240" controls>
-  <source src="https://github.com/pascaltribel/PyAWD/blob/main/examples/example.mp4" type="video/mp4">
-</video>
+![Example of simulation video](examples/example.gif)
 
 ## Documentation
 Basic help is provided for each class and function, and is accessible via the Python `help()` function.
