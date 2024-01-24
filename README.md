@@ -8,7 +8,7 @@ The Marmousi velocity field used in the simulation is a subset of the following:
 ## Installation
 The package (along with the dependencies) is accessible via [PyPI](https://pypi.org):
 
-```
+```bash
 pip install pyawd
 ```
 
@@ -52,7 +52,7 @@ Basic help is provided for each class and function, and is accessible via the Py
 ## Examples
 Mutliple IPython notebooks are presented in the [examples](examples/) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
 
-```
+```bash
 jupyter-notebook
 ```
 
