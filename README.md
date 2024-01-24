@@ -4,6 +4,8 @@ A package for generating a Pytorch dataset containing simulations of the acousti
 ## Marmousi velocity field
 ![Marmousi velocity field](https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg)
 
+<img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg alt="Marmousi velocity field" width="20%"/>
+
 ## Installation
 The package is accessible via [PyPI](https://pypi.org):
 
