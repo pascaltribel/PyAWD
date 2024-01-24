@@ -1,2 +1,4 @@
 upload_on_pip
 dist/
+PyAWD.egg-info/
+.DS_Store
