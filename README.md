@@ -2,9 +2,8 @@
 A package for generating a Pytorch dataset containing simulations of the acoustic wave propagation in the Marmousi velocity field. It uses the [Devito Python Library](https://www.devitoproject.org) to solve the acoustic wave PDE from various random initial conditions.
 
 ## Marmousi velocity field
-![Marmousi velocity field](https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg)
-
-<img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg" alt="Marmousi velocity field" width="20%"/>
+The Marmousi velocity field used in the simulation is a subset of the following:
+<img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg" alt="Marmousi velocity field" width="40%"/>
 
 ## Installation
 The package is accessible via [PyPI](https://pypi.org):
