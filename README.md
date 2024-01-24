@@ -44,7 +44,7 @@ dataset.generate_video(0, "example", 240)
 
 This produces the following video (stored in the file `example.mp4`):
 
-https://github.com/pascaltribel/PyAWD/blob/main/examples/example.mp4
+[![](Example of video output)](examples/example.mp4)
 
 ## Documentation
 Basic help is provided for each class and function, and is accessible via the Python `help()` function.
