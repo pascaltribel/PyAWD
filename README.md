@@ -15,20 +15,20 @@ pip install pyawd
 ## Getting started
 
 Basic imports:
-```
+```python
 import PyAWD
 from PyAWD.AcousticWaveDataset import AcousticWaveDataset
 ```
 
 Let us generate a Dataset made of 10 simulations. Each simulation is run in a $250\times 250$ matrix. We store the field state every $2$ seconds and we run the simulation for $10$ seconds:
 
-```
+```python
 dataset = AcousticWaveDataset(2, nx=250, dt=2, t=10)
 ```
 
 Then we plot the first simulation:
 
-```
+```python
 dataset.plot_item(0)
 ```
 
@@ -37,7 +37,7 @@ Which outputs the following figure:
 
 Finally, we can generate a video of this simulation. We will use $240$ frames, so that we have a final rate of $24 fps$:
 
-```
+```python
 dataset.generate_video(0, "example", 240)
 ```
 
