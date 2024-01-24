@@ -1,8 +1,9 @@
 # PyAWD: a Python acoustic wave propagation dataset using PyTorch and Devito
-This package offers tools for generating a dataset of simulations of an acousic wave propagation in the Marmousi velocity field. It uses the <a href="https://www.devitoproject.org">Devito Python Library</a> to solve the acoustic wave PDE from various random initial conditions.
+This package offers tools for generating a dataset of simulations of the acoustic wave propagation in the Marmousi velocity field. It uses the <a href="https://www.devitoproject.org">Devito Python Library</a> to solve the acoustic wave PDE from various random initial conditions.
 
 ## Installation
 The package is accessible via <a href="https://pypi.org">PyPI</a>:
+
 `pip install pyawd`
 
 ## Documentation
