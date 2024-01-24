@@ -46,7 +46,7 @@ This produces the following video (stored in the file `example.mp4`):
 
 
 <video width="320" height="240" controls>
-  <source src="examples/example.mp4" type="video/mp4">
+  <source src="./examples/example.mp4" type="video/mp4">
 </video>
 
 ## Documentation
