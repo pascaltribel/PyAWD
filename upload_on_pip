@@ -1,0 +1,5 @@
+pip uninstall pyawd -y
+rm -rf dist/
+python3 -m build
+python3 -m twine upload --skip-existing --repository testpypi dist/* -u __token__ -p pypi-AgENdGVzdC5weXBpLm9yZwIkZjY1ODFhNTctZTM2MS00MTQyLThmY2EtMDA4NTMzNWI5ZWM0AAIqWzMsIjBmZTNjZWFlLTFmMzItNGIwYS1hNzNlLWJjNTJhYjA3ZjU1OSJdAAAGIE2zBig9-DrUU1Gaecm__KoqjKSTNgL1H-H3TlJFkZ6v
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps pyawd

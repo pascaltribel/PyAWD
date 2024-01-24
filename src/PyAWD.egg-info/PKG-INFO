@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: PyAWD
+Version: 0.0.12
+Summary: A Pytorch dataset for Acoustic Wave Propagation
+Author-email: Tribel Pascal <pascal.tribel@ulb.be>
+Project-URL: Homepage, https://github.com/pascaltribel/WavePropagation
+Project-URL: Issues, https://github.com/pascaltribel/WavePropagation/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# PyAWD: a Python acoustic wave propagation dataset using PyTorch and Devito

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "devito", "torch", "matplotlib", "tqdm", "numpy", "sympy"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+include = ["PyAWD"]
+exclude = ["upload_on_pip"]
+
+[project]
+name = "PyAWD"
+version = "0.0.12"
+authors = [{name="Tribel Pascal", email="pascal.tribel@ulb.be" }]
+description = "A Pytorch dataset for Acoustic Wave Propagation"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/pascaltribel/WavePropagation"
+Issues = "https://github.com/pascaltribel/WavePropagation/issues"

@@ -1,0 +1,13 @@
+LICENSE
+README.md
+pyproject.toml
+src/PyAWD/AcousticWaveDataset.py
+src/PyAWD/GenerateVideo.py
+src/PyAWD/Marmousi.py
+src/PyAWD/__init__.py
+src/PyAWD/_marmousi_data.py
+src/PyAWD/utils.py
+src/PyAWD.egg-info/PKG-INFO
+src/PyAWD.egg-info/SOURCES.txt
+src/PyAWD.egg-info/dependency_links.txt
+src/PyAWD.egg-info/top_level.txt
