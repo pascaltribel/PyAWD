@@ -6,7 +6,7 @@ The Marmousi velocity field used in the simulation is a subset of the following:
 <img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg" alt="Marmousi velocity field" width="40%"/>
 
 ## Installation
-The package (along with the dependencies) is accessible via [PyPI](https://pypi.org):
+The package (along with the dependencies) is accessible via [PyPI](https://pypi.org/project/PyAWD/):
 
 ```bash
 pip install pyawd
