@@ -44,7 +44,10 @@ dataset.generate_video(0, "example", 240)
 
 This produces the following video (stored in the file `example.mp4`):
 
-[![](Example of video output)](examples/example.mp4)
+
+<video width="320" height="240" controls>
+  <source src="examples/example.mp4" type="video/mp4">
+</video>
 
 ## Documentation
 Basic help is provided for each class and function, and is accessible via the Python `help()` function.
