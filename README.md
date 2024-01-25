@@ -34,7 +34,7 @@ dataset.plot_item(0)
 ```
 
 Which outputs the following figure:
-![Example of simulation output](examples/example.png)
+![Example of simulation output](https://github.com/pascaltribel/PyAWD/tree/main/examples/examples/example.png)
 
 Finally, we can generate a video of this simulation. We will use $240$ frames, so that we have a final rate of $24 fps$:
 
@@ -45,7 +45,7 @@ dataset.generate_video(0, "example", 240)
 
 This produces the following video (stored in the file `example.mp4`):
 
-<img src="examples/example.gif" alt="Example of simulation video" width="40%"/>
+<img src="https://github.com/pascaltribel/PyAWD/tree/main/examples/example.gif" alt="Example of simulation video" width="40%"/>
 
 ## Documentation
 Basic help is provided for each class and function, and is accessible via the Python `help()` function.

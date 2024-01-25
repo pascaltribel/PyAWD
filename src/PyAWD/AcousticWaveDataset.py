@@ -59,7 +59,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             self.velocity_model = dvt.Function(name='c', grid=self.grid)
             self.velocity_model.data[:] = Marmousi(self.nx).get_data()
     
-            self.epicenters = torch.randint(-self.nx//2, self.nx//2, size=(self.size, self.size)).reshape((self.size, self.size))
+            self.epicenters = torch.randint(-self.nx//2, self.nx//2, size=(self.size, 2)).reshape((self.size, 2))
     
             self.cmap = get_black_cmap()
             
@@ -111,4 +111,4 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         return self.size
 
     def __getitem__(self, idx):
-        return self.epicenters, self.data[idx].data[::int(self.ndt/self.nt)]
+        return self.epicenters[idx], self.data[idx].data[::int(self.ndt/self.nt)]
