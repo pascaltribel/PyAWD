@@ -40,16 +40,18 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
     Arguments:
         - size: the number of samples to generate in the dataset
         - nx: the discretization size of the array (maximum size is currently 955)
+        - sx: the sub-scaling factor of the array (0.5 means 1/2 values are returned)
         - ddt: the time step used for the Operator solving iterations
         - dt: the time step used for storing the wave propagation step (this should be higher than ddt)
         - t: the simulations duration
     """
-    def __init__(self, size, nx=128, ddt=0.01, dt=2, t=10):
+    def __init__(self, size, nx=128, sx=1., ddt=0.01, dt=2, t=10):
         try:
             if dt < ddt:
                 raise ValueError('dt should be >= ddt')
             self.size = size
             self.nx = min(nx, 955)
+            self.sx = sx
             self.ddt = ddt
             self.dt = dt
             self.nt = int(t/self.dt)
@@ -84,7 +86,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         epicenter, item = self[idx]
         fig, ax = plt.subplots(1, self.nt, figsize=(self.nt*3, 3))
         for i in range(self.nt):
-            ax[i].imshow(self.velocity_model.data, vmin=np.min(self.velocity_model.data), vmax=np.max(self.velocity_model.data), cmap="gray")
+            ax[i].imshow(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)], vmin=np.min(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), vmax=np.max(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), cmap="gray")
             x = ax[i].imshow(item[i*(item.shape[0]//self.nt)], 
                              vmin=-np.max(np.abs(item[i*(item.shape[0]//self.nt):])), 
                              vmax=np.max(np.abs(item[i*(item.shape[0]//self.nt):])), 
@@ -106,9 +108,20 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         """
         u = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model)
         generate_video(u.data[::self.ndt//(nb_images)], filename, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, verbose=True)
-        
+
+    def set_scaling_factor(self, sx):
+        """
+        Fixes a new scaling factor (0.5 means 1/2 values are returned). It should be <= 1.
+        Arguments:
+            - sx: the new scaling factor
+        """
+        if sx <= 1.:
+            self.sx = sx
+        else:
+            print("The scaling factor should be lower or equal to 1.")
+            
     def __len__(self):
         return self.size
 
     def __getitem__(self, idx):
-        return self.epicenters[idx], self.data[idx].data[::int(self.ndt/self.nt)]
+        return self.epicenters[idx], self.data[idx].data[::int(self.ndt/self.nt), ::int(1/self.sx), ::int(1/self.sx)]
