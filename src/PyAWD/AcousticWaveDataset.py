@@ -5,7 +5,7 @@ import numpy as np
 import devito as dvt
 import matplotlib.pyplot as plt
 import torch
-from tqdm.notebook import tqdm
+from tqdm.auto import tqdm
 
 from PyAWD.GenerateVideo import generate_video
 from PyAWD.utils import *
@@ -61,7 +61,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             self.velocity_model = dvt.Function(name='c', grid=self.grid)
             self.velocity_model.data[:] = Marmousi(self.nx).get_data()
     
-            self.epicenters = torch.randint(-self.nx//2, self.nx//2, size=(self.size, 2)).reshape((self.size, 2))
+            self.epicenters = np.random.randint(-self.nx//2, self.nx//2, size=(self.size, 2)).reshape((self.size, 2))
     
             self.cmap = get_black_cmap()
             
@@ -84,6 +84,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             - idx: the number of the sample to plot
         """
         epicenter, item = self[idx]
+        epicenter, item = epicenter.cpu(), item.cpu()
         fig, ax = plt.subplots(1, self.nt, figsize=(self.nt*3, 3))
         for i in range(self.nt):
             ax[i].imshow(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)], vmin=np.min(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), vmax=np.max(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), cmap="gray")
