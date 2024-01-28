@@ -36,15 +36,15 @@ dataset.plot_item(0)
 Which outputs the following figure:
 ![Example of simulation output](https://github.com/pascaltribel/PyAWD/tree/main/examples/example.png)
 
-Finally, we can generate a video of this simulation. We will use $240$ frames, so that we have a final rate of $24 fps$:
+Finally, we can generate a video of this simulation. We will use $200$ frames, which yields a final rate of $20 fps$:
 
 ```python
-dataset.generate_video(0, "example", 240)
+dataset.generate_video(0, "example", 200)
 ```
 
 This produces the following video (stored in the file `example.mp4`):
 
-<img src="https://github.com/pascaltribel/PyAWD/tree/main/examples/example.gif" alt="Example of simulation video" width="40%"/>
+<img src="https://github.com/pascaltribel/PyAWD/tree/main/examples/example_interrogators.mp4" alt="Example of simulation video" width="40%"/>
 
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
@@ -64,7 +64,7 @@ Mutliple IPython notebooks are presented in the [examples](examples/) directory.
 jupyter-notebook
 ```
 
-- `HeatPropagation.ipynb`: an introduction to PDE solving and simulation using Devito applied on the heat propagation
 - `AcousticWaveGeneration.ipynb`: an introduction to PDE solving and simulation using Devito applied on the acoustic wave propagation
 - `Marmousi.ipynb`: a visualisation of the Marmousi velocity field used in the simulations
 - `GenerateAcousticWaveDataset.ipynb`: an example of dataset generation workflow
+- `Interrogators.ipynb`: an introduction to the PyAWD Interrogators usage

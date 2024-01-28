@@ -5,11 +5,11 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src/"]
 include = ["PyAWD"]
-exclude = ["upload_on_pip"]
+exclude = ["upload_on_pip", "reinstall"]
 
 [project]
 name = "PyAWD"
-version = "0.2.2"
+version = "0.2.8"
 authors = [{name="Tribel Pascal", email="pascal.tribel@ulb.be" }]
 description = "A Pytorch dataset for Acoustic Wave Propagation"
 readme = "README.md"

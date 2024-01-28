@@ -4,12 +4,15 @@
 import numpy as np
 import devito as dvt
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import torch
 from tqdm.auto import tqdm
 
 from PyAWD.GenerateVideo import generate_video
 from PyAWD.utils import *
 from PyAWD.Marmousi import *
+
+COLORS = mcolors.TABLEAU_COLORS
 
 dvt.logger.set_log_level('WARNING')
 
@@ -60,7 +63,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             
             self.grid = dvt.Grid(shape=(self.nx, self.nx), extent=(1., 1.))
             self.velocity_model = dvt.Function(name='c', grid=self.grid)
-            self.velocity_model.data[:] = Marmousi(self.nx).get_data()
+            self.velocity_model.data[:] = Marmousi(self.nx).get_data().T
     
             self.epicenters = np.random.randint(-self.nx//2, self.nx//2, size=(self.size, 2)).reshape((self.size, 2))
             self.generate_data()
@@ -80,7 +83,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             data = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model)
             self.data.append(data[::int(self.ndt/self.nt)])
             for interrogator in self.interrogators:
-                self.interrogators_data[interrogator].append(data[:, interrogator[0], interrogator[1]])
+                self.interrogators_data[interrogator].append(data[:, interrogator[0]+(self.nx//2), -interrogator[1]+(self.nx//2)])
         self.data = np.array(self.data)
 
     def interrogate(self, idx, point):
@@ -102,19 +105,44 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         Arguments:
             - idx: the number of the sample to plot
         """
+        colors = {}
+        i = 0
+        for interrogator in self.interrogators:
+            colors[interrogator] = list(COLORS.values())[i]
+            i += 1
         epicenter, item = self[idx]
         fig, ax = plt.subplots(1, self.nt, figsize=(self.nt*3, 3))
         for i in range(self.nt):
-            ax[i].imshow(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)], vmin=np.min(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), vmax=np.max(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), cmap="gray")
-            x = ax[i].imshow(item[i*(item.shape[0]//self.nt)], 
+            ax[i].imshow(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)].T, vmin=np.min(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), vmax=np.max(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), cmap="gray")
+            x = ax[i].imshow(item[i*(item.shape[0]//self.nt)].T, 
                              vmin=-np.max(np.abs(item[i*(item.shape[0]//self.nt):])), 
                              vmax=np.max(np.abs(item[i*(item.shape[0]//self.nt):])), 
                              cmap=self.cmap)
+            for interrogator in self.interrogators:
+                ax[i].scatter(interrogator[0]+(self.nx//2), -interrogator[1]+(self.nx//2), marker="1", color=colors[interrogator])
             ax[i].set_title("t = " + str(i*(item.shape[0]//self.nt)*self.dt) + "s")
             ax[i].axis("off")
             fig.colorbar(x)
         plt.tight_layout()
         plt.show()
+
+    def plot_interrogators_response(self, idx):
+        """
+        Plots the measurements taken by the interrogators for the idx^th sample.
+        Arguments:
+            - idx: the number of the sample to plot
+        """
+        colors = {}
+        i = 0
+        for interrogator in self.interrogators:
+            colors[interrogator] = list(COLORS.values())[i]
+            i += 1
+        for i in self.interrogators:
+            plt.plot(np.arange(0, self.ndt*self.ddt, self.ddt), self.interrogate(idx, i), color=colors[i])
+        plt.xlabel("time (s)")
+        plt.ylabel("Amplitude")
+        plt.legend([str(i) for i in self.interrogators])
+        plt.title("Amplitude measurement for each interrogator")
 
     def generate_video(self, idx, filename, nb_images):
         """
@@ -123,10 +151,10 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             - idx: the number of the sample to simulate in the video
             - filename: the name of the video output file (without extension)
                         The video will be stored in a file called `filename`.mp4
-            - nb_images: the number of frames used to generate the video
+            - nb_images: the number of frames used to generate the video. This should be an entire divider of the number of points computed when applying the solving operator
         """
         u = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model)
-        generate_video(u[::self.ndt//(nb_images)], filename, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, verbose=True)
+        generate_video(u[::self.ndt//(nb_images)], self.interrogators, {i: self.interrogators_data[i][idx][::self.ndt//(nb_images)] for i in self.interrogators}, filename, nx=self.nx, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, verbose=True)
 
     def set_scaling_factor(self, sx):
         """
