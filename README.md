@@ -27,7 +27,7 @@ Let us generate a Dataset made of 10 simulations. Each simulation is run in a $2
 dataset = AcousticWaveDataset(2, nx=250, dt=2, t=10)
 ```
 
-Then we plot the first simulation:
+Then we plot the first simulation. The &#128960; character shows the interrogator position:
 
 ```python
 dataset.plot_item(0)
