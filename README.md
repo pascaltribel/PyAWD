@@ -44,7 +44,11 @@ dataset.generate_video(0, "example", 200)
 
 This produces the following video (stored in the file `example.mp4`):
 
+<<<<<<< HEAD
 <img src="examples/example_interrogators.mp4" alt="Example of simulation video" width="40%"/>
+=======
+<img src="https://github.com/pascaltribel/PyAWD/tree/main/examples/example_interrogators.gif" alt="Example of simulation video" width="40%"/>
+>>>>>>> a6b704b (plotting for interrogators)
 
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
