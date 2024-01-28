@@ -46,8 +46,6 @@ This produces the following video (stored in the file `example.mp4`):
 
 ![Example of simulation output](examples/dataset_generation.gif)
 
-<img src="examples/example_interrogators.gif" alt="Example of simulation video" width="40%"/>
-
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
 
