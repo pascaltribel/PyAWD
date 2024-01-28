@@ -44,6 +44,7 @@ dataset.generate_video(0, "example", 240)
 
 This produces the following video (stored in the file `example.mp4`):
 
+![Example of simulation output](https://github.com/pascaltribel/PyAWD/tree/main/examples/example.gif)
 <img src="https://github.com/pascaltribel/PyAWD/tree/main/examples/example.gif" alt="Example of simulation video" width="40%"/>
 
 
