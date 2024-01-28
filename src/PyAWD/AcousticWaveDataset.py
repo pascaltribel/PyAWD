@@ -75,25 +75,26 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         Generates the dataset content by solving the Acoustic Wave PDE for each of the `epicenters`
         """
         self.data = []
-        self.interrogators_data = {}
+        self.interrogators_data = {interrogator:[] for interrogator in self.interrogators}
         for i in tqdm(range(self.size)):
             data = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model)
             self.data.append(data[::int(self.ndt/self.nt)])
             for interrogator in self.interrogators:
-                self.interrogators_data[interrogator] = data[:, interrogator[0], interrogator[1]]
+                self.interrogators_data[interrogator].append(data[:, interrogator[0], interrogator[1]])
         self.data = np.array(self.data)
 
-    def interrogate(self, point):
+    def interrogate(self, idx, point):
         """
-        Returns the amplitude measurements for the interrogator at coordinates `point`. 
+        Returns the amplitude measurements for the interrogator at coordinates `point` for the `idx`th sample. 
         Arguments:
+            - idx: the number of the sample to interrogate
             - point: the interrogator position as a Tuple
         """
         if point not in self.interrogators_data:
             print("Error: the interrogated point is not interrogable.")
             print("Available interrogable points:", list(self.interrogators_data.keys()))
         else:
-            return self.interrogators_data[point]
+            return self.interrogators_data[point][idx]
 
     def plot_item(self, idx):
         """
