@@ -42,10 +42,17 @@ Finally, we can generate a video of this simulation. We will use $240$ frames, s
 dataset.generate_video(0, "example", 240)
 ```
 
-
 This produces the following video (stored in the file `example.mp4`):
 
 <img src="https://github.com/pascaltribel/PyAWD/tree/main/examples/example.gif" alt="Example of simulation video" width="40%"/>
+
+
+By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
+
+```python
+dataset.interrogate((0, 0))
+```
+
 
 ## Documentation
 Basic help is provided for each class and function, and is accessible via the Python `help()` function.

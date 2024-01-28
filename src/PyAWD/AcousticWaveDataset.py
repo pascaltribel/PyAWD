@@ -32,7 +32,7 @@ def solve_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
     stencil = dvt.solve(eq, u.forward)
     op = dvt.Operator(dvt.Eq(u.forward, stencil), opt='noop')
     op.apply(dt=ddt)
-    return u
+    return np.array(u.data)
 
 class AcousticWaveDataset(torch.utils.data.Dataset):
     """
@@ -45,7 +45,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         - dt: the time step used for storing the wave propagation step (this should be higher than ddt)
         - t: the simulations duration
     """
-    def __init__(self, size, nx=128, sx=1., ddt=0.01, dt=2, t=10):
+    def __init__(self, size, nx=128, sx=1., ddt=0.01, dt=2, t=10, interrogators=[(0, 0)]):
         try:
             if dt < ddt:
                 raise ValueError('dt should be >= ddt')
@@ -56,16 +56,17 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             self.dt = dt
             self.nt = int(t/self.dt)
             self.ndt = int(self.nt*(self.dt/self.ddt))
+            self.interrogators = interrogators
             
             self.grid = dvt.Grid(shape=(self.nx, self.nx), extent=(1., 1.))
             self.velocity_model = dvt.Function(name='c', grid=self.grid)
             self.velocity_model.data[:] = Marmousi(self.nx).get_data()
     
             self.epicenters = np.random.randint(-self.nx//2, self.nx//2, size=(self.size, 2)).reshape((self.size, 2))
-    
+            self.generate_data()
+
             self.cmap = get_black_cmap()
             
-            self.generate_data()
         except ValueError as err:
             print(err)
 
@@ -74,8 +75,25 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         Generates the dataset content by solving the Acoustic Wave PDE for each of the `epicenters`
         """
         self.data = []
+        self.interrogators_data = {}
         for i in tqdm(range(self.size)):
-            self.data.append(solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model))
+            data = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model)
+            self.data.append(data[::int(self.ndt/self.nt)])
+            for interrogator in self.interrogators:
+                self.interrogators_data[interrogator] = data[:, interrogator[0], interrogator[1]]
+        self.data = np.array(self.data)
+
+    def interrogate(self, point):
+        """
+        Returns the amplitude measurements for the interrogator at coordinates `point`. 
+        Arguments:
+            - point: the interrogator position as a Tuple
+        """
+        if point not in self.interrogators_data:
+            print("Error: the interrogated point is not interrogable.")
+            print("Available interrogable points:", list(self.interrogators_data.keys()))
+        else:
+            return self.interrogators_data[point]
 
     def plot_item(self, idx):
         """
@@ -84,7 +102,6 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             - idx: the number of the sample to plot
         """
         epicenter, item = self[idx]
-        epicenter, item = epicenter.cpu(), item.cpu()
         fig, ax = plt.subplots(1, self.nt, figsize=(self.nt*3, 3))
         for i in range(self.nt):
             ax[i].imshow(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)], vmin=np.min(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), vmax=np.max(self.velocity_model.data[::int(1/self.sx), ::int(1/self.sx)]), cmap="gray")
@@ -108,7 +125,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             - nb_images: the number of frames used to generate the video
         """
         u = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model)
-        generate_video(u.data[::self.ndt//(nb_images)], filename, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, verbose=True)
+        generate_video(u[::self.ndt//(nb_images)], filename, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, verbose=True)
 
     def set_scaling_factor(self, sx):
         """
@@ -125,4 +142,4 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         return self.size
 
     def __getitem__(self, idx):
-        return self.epicenters[idx], self.data[idx].data[::int(self.ndt/self.nt), ::int(1/self.sx), ::int(1/self.sx)]
+        return self.epicenters[idx], self.data[idx][:, ::int(1/self.sx), ::int(1/self.sx)]
