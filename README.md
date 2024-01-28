@@ -34,7 +34,7 @@ dataset.plot_item(0)
 ```
 
 Which outputs the following figure:
-![Example of simulation output](https://github.com/pascaltribel/PyAWD/tree/main/examples/example.png)
+![Example of simulation output](examples/example.png)
 
 Finally, we can generate a video of this simulation. We will use $200$ frames, which yields a final rate of $20 fps$:
 
@@ -44,7 +44,7 @@ dataset.generate_video(0, "example", 200)
 
 This produces the following video (stored in the file `example.mp4`):
 
-<img src="https://github.com/pascaltribel/PyAWD/tree/main/examples/example_interrogators.mp4" alt="Example of simulation video" width="40%"/>
+<img src="examples/example_interrogators.mp4" alt="Example of simulation video" width="40%"/>
 
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
