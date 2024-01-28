@@ -44,6 +44,8 @@ dataset.generate_video(0, "example", 200)
 
 This produces the following video (stored in the file `example.mp4`):
 
+![Example of simulation output](examples/example.gif)
+
 <img src="examples/example_interrogators.gif" alt="Example of simulation video" width="40%"/>
 
 
