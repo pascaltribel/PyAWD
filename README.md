@@ -64,6 +64,9 @@ Mutliple IPython notebooks are presented in the [examples](examples/) directory.
 jupyter-notebook
 ```
 
+## Related Works:
+- https://essd.copernicus.org/preprints/essd-2023-470/
+
 - `AcousticWaveGeneration.ipynb`: an introduction to PDE solving and simulation using Devito applied on the acoustic wave propagation
 - `Marmousi.ipynb`: a visualisation of the Marmousi velocity field used in the simulations
 - `GenerateAcousticWaveDataset.ipynb`: an example of dataset generation workflow
