@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "devito", "torch", "matplotlib", "tqdm", "numpy", "sympy"]
+requires = ["setuptools>=61.0", "devito", "torch", "matplotlib", "tqdm", "numpy", "sympy", "opencv-python"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -9,7 +9,7 @@ exclude = ["upload_on_pip", "reinstall"]
 
 [project]
 name = "PyAWD"
-version = "0.2.8"
+version = "0.2.1"
 authors = [{name="Tribel Pascal", email="pascal.tribel@ulb.be" }]
 description = "A Pytorch dataset for Acoustic Wave Propagation"
 readme = "README.md"

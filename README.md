@@ -18,13 +18,13 @@ pip install pyawd
 Basic imports:
 ```python
 import PyAWD
-from PyAWD.AcousticWaveDataset import AcousticWaveDataset
+from PyAWD.ScalarAcousticWaveDataset import ScalarAcousticWaveDataset
 ```
 
 Let us generate a Dataset made of 10 simulations. Each simulation is run in a $250\times 250$ matrix. We store the field state every $2$ seconds and we run the simulation for $10$ seconds:
 
 ```python
-dataset = AcousticWaveDataset(2, nx=250, dt=2, t=10)
+dataset = ScalarAcousticWaveDataset(2, nx=250, dt=2, t=10)
 ```
 
 Then we plot the first simulation. The &#128960; character shows the interrogator position:
@@ -64,7 +64,8 @@ Mutliple IPython notebooks are presented in the [examples](examples/) directory.
 jupyter-notebook
 ```
 
-- `AcousticWaveGeneration.ipynb`: an introduction to PDE solving and simulation using Devito applied on the acoustic wave propagation
+- `ScalarAcousticWaveGeneration.ipynb`: an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation
+- `VectorialAcousticWaveGeneration.ipynb`: an introduction to PDE solving and simulation using Devito applied on the vectorial acoustic wave propagation
 - `Marmousi.ipynb`: a visualisation of the Marmousi velocity field used in the simulations
 - `GenerateAcousticWaveDataset.ipynb`: an example of dataset generation workflow
 - `Interrogators.ipynb`: an introduction to the PyAWD Interrogators usage

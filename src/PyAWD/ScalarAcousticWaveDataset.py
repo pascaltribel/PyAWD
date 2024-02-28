@@ -16,7 +16,7 @@ COLORS = mcolors.TABLEAU_COLORS
 
 dvt.logger.set_log_level('WARNING')
 
-def solve_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
+def solve_scalar_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
     """
     Solves the Acoustic Wave Equation for the input parameters
     Arguments:
@@ -37,7 +37,7 @@ def solve_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
     op.apply(dt=ddt)
     return np.array(u.data)
 
-class AcousticWaveDataset(torch.utils.data.Dataset):
+class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
     """
     A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field.
     Arguments:
@@ -80,7 +80,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         self.data = []
         self.interrogators_data = {interrogator:[] for interrogator in self.interrogators}
         for i in tqdm(range(self.size)):
-            data = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model)
+            data = solve_scalar_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model)
             self.data.append(data[::int(self.ndt/self.nt)])
             for interrogator in self.interrogators:
                 self.interrogators_data[interrogator].append(data[:, interrogator[0]+(self.nx//2), -interrogator[1]+(self.nx//2)])
@@ -153,7 +153,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
                         The video will be stored in a file called `filename`.mp4
             - nb_images: the number of frames used to generate the video. This should be an entire divider of the number of points computed when applying the solving operator
         """
-        u = solve_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model)
+        u = solve_scalar_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model)
         generate_video(u[::self.ndt//(nb_images)], self.interrogators, {i: self.interrogators_data[i][idx][::self.ndt//(nb_images)] for i in self.interrogators}, filename, nx=self.nx, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, verbose=True)
 
     def set_scaling_factor(self, sx):
