@@ -37,7 +37,7 @@ def get_ricker_wavelet(nx, A=0.1, x0=0, y0=0, sigma=0.075):
     x, y = np.meshgrid(x, y)
     return A * (2-x**2-y**2)*np.exp(-(x**2+y**2)/(2*sigma**2))
 
-def create_inverse_distance_matrix(nx, x0=0, y0=0, z0=0, tau=nx//10, dim=2):
+def create_inverse_distance_matrix(nx, x0=0, y0=0, z0=0, tau=None, dim=2):
     """
     Creates an 1/distance matrix centered around (x0, y0)
     Arguments:
@@ -49,6 +49,8 @@ def create_inverse_distance_matrix(nx, x0=0, y0=0, z0=0, tau=nx//10, dim=2):
     Returns:
         - a np.array containing the generated explosive source
     """
+    if not tau:
+        tau = nx//2
     x = np.arange(nx)
     y = np.arange(nx)
     if dim==2:
@@ -63,7 +65,7 @@ def create_inverse_distance_matrix(nx, x0=0, y0=0, z0=0, tau=nx//10, dim=2):
     return distance
     
 
-def create_explosive_source(nx, x0=0, y0=0, z0=0, tau=nx//10, dim=2):
+def create_explosive_source(nx, x0=0, y0=0, z0=0, tau=None, dim=2):
     """
     Creates an explosive source (1/distance up to nx//10) centered around (x0, y0)
     Arguments:
@@ -74,14 +76,16 @@ def create_explosive_source(nx, x0=0, y0=0, z0=0, tau=nx//10, dim=2):
     Returns:
         - a np.array containing the generated explosive source
     """
+    if not tau:
+        tau = nx//10
     if dim==2:
         s_x, s_y = create_inverse_distance_matrix(nx, x0, y0, tau=tau, dim=dim),\
                     create_inverse_distance_matrix(nx, x0, y0, tau=tau, dim=dim)
-        s_x[:, :nx//2] *= -1
-        s_x[:, nx//2] = 0
+        s_x[:, :x0+nx//2] *= -1
+        s_x[:, x0+nx//2] = 0
         
-        s_y[:nx//2] *= -1
-        s_y[nx//2] = 0
+        s_y[:y0+nx//2] *= -1
+        s_y[y0+nx//2] = 0
         
         res = s_x, s_y
         
@@ -89,14 +93,14 @@ def create_explosive_source(nx, x0=0, y0=0, z0=0, tau=nx//10, dim=2):
         s_x, s_y, s_z = create_inverse_distance_matrix(nx, x0, y0, z0, tau, dim), \
                     create_inverse_distance_matrix(nx, x0, y0, z0, tau, dim),\
                     create_inverse_distance_matrix(nx, x0, y0, z0, tau, dim)
-        s_x[:, :, :nx//2] *= -1
-        s_x[:, :, nx//2] = 0
+        s_x[:, :, :x0+nx//2] *= -1
+        s_x[:, :, x0+nx//2] = 0
         
-        s_y[:nx//2] *= -1
-        s_y[nx//2] = 0
+        s_y[:, :y0+nx//2] *= -1
+        s_y[:, y0+nx//2] = 0
 
-        s_z[:nx//2] *= -1
-        s_z[nx//2] = 0
+        s_z[:z0+nx//2] *= -1
+        s_z[z0+nx//2] = 0
 
         res = s_x, s_y, s_z
         
