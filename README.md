@@ -53,6 +53,19 @@ By default, the point `(0, 0)` contains an interrogator. This means that the con
 dataset.interrogate((0, 0))
 ```
 
+## More advanced usage
+Using the `VectorialAcousticWaveDataset` class, you can produce simulations in 2D which are more realistic:
+
+```python
+dataset = VectorialAcousticWaveDataset(2, nx=250, dt=2, interrogators=[(-10, 0), (10, 0)], t=10)
+```
+
+Especially, the `interrogate` method provides measurements along two orthogonal dimensions:
+
+```python
+dataset.plot_interrogators_data()
+```
+
 
 ## Documentation
 Basic help is provided for each class and function, and is accessible via the Python `help()` function.
