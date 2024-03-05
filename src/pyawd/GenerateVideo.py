@@ -1,20 +1,23 @@
 # pyawd - Marmousi
 # Tribel Pascal - pascal.tribel@ulb.be
+from typing import Tuple, List, Dict
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import TABLEAU_COLORS
 from glob import glob
 import numpy as np
 from subprocess import call
-from os import remove, chdir
+from os import remove
 from tqdm.auto import tqdm
+from devito import Function
 
-from pyawd.utils import *
+from pyawd.utils import get_black_cmap
 
 COLORS = TABLEAU_COLORS
 
 
-def generate_video(img, interrogators=None, interrogators_data=None, name="test", nx=32, dt=0.01, c=[], verbose=False):
+def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None, interrogators_data: Dict[Tuple: List] = None,
+                   name: str = "test", nx: int = 32, dt: float = 0.01, c: Function = None, verbose: bool = False):
     """
     Generates a video from a sequence of images.
     """
@@ -28,15 +31,15 @@ def generate_video(img, interrogators=None, interrogators_data=None, name="test"
         print("Generating", len(img), "images.")
     for i in tqdm(range(len(img))):
         if interrogators:
-            fig, ax = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={'width_ratios': [1, 1]})
-            if c != []:
+            fig, ax = plt.subplots(ncols=2, figsize=(10, 5), gridspec_kw={'width_ratios': [1, 1]})
+            if c:
                 ax[0].imshow(c.data.T, vmin=np.min(c.data), vmax=np.max(c.data), cmap="gray")
             im = ax[0].imshow(img[i].T, cmap=get_black_cmap(), vmin=-np.max(np.abs(img[i:])),
                               vmax=np.max(np.abs(img[i:])))
             plt.colorbar(im, shrink=0.75, ax=ax[0])
         else:
-            fig, ax = plt.subplots(1, 1, figsize=(5, 5), gridspec_kw={'width_ratios': [1]})
-            if c != []:
+            fig, ax = plt.subplots(figsize=(5, 5), gridspec_kw={'width_ratios': [1]})
+            if c:
                 ax.imshow(c.data.T, vmin=np.min(c.data), vmax=np.max(c.data), cmap="gray")
             im = ax.imshow(img[i].T, cmap=get_black_cmap(), vmin=-np.max(np.abs(img[i:])), vmax=np.max(np.abs(img[i:])))
             ax.axis('off')
@@ -59,28 +62,20 @@ def generate_video(img, interrogators=None, interrogators_data=None, name="test"
 
     call([
         'ffmpeg', '-loglevel', 'panic', '-framerate', str(int(1 / dt)), '-i', name + '%02d.png', '-r', '32', '-pix_fmt',
-        'yuv420p',
-                                                                              name + ".mp4", '-y'
+        'yuv420p', name + ".mp4", '-y'
     ])
     for file_name in glob(name + "*.png"):
         remove(file_name)
 
 
-def generate_quiver_video(quiver_x, quiver_y, interrogators=None, interrogators_data=None, name="test", nx=32, dt=0.01,
-                          c=[], max_velocity=0, verbose=False):
+def generate_quiver_video(quiver_x: np.ndarray[float], quiver_y: np.ndarray[float], interrogators: List[Tuple] = None,
+                          interrogators_data: Dict[Tuple: List] = None, name: str = "test", nx: int = 32, dt: float = 0.01,
+                          c: Function = None, max_velocity: float = 0, verbose: bool = False):
     """
     Generates a video from a sequence of images.
-    Arguments:
-        - quiver_x: a list 2d np.arrays representing the arrows x directions
-        - quiver_y: a list 2d np.arrays representing the arrows y directions
-        - interrogators: a list of the interrogators positions
-        - interrogators_data: a list containing the interrogators responses
-        - name: the name of the output file (without extension)
-        - nx: the size of the images
-        - dt: the time interval between each images
-        - c: the background image representing the velocity field
-        - verbose: if True, displays logging informations
     """
+    if c is None:
+        c = []
     nu_x = np.max(quiver_x)
     nu_y = np.max(quiver_y)
     x, y = np.meshgrid(np.arange(0, nx), np.arange(0, nx))
@@ -94,16 +89,16 @@ def generate_quiver_video(quiver_x, quiver_y, interrogators=None, interrogators_
         print("Generating", len(quiver_x), "images.")
     for i in tqdm(range(len(quiver_x))):
         if interrogators:
-            fig, ax = plt.subplots(1, len(interrogators) + 1, figsize=((len(interrogators) + 1) * 5, 5),
+            fig, ax = plt.subplots(ncols=(len(interrogators) + 1), figsize=((len(interrogators) + 1) * 5, 5),
                                    gridspec_kw={'width_ratios': [1 for _ in range(len(interrogators) + 1)]})
-            if c != []:
+            if c:
                 ax[0].imshow(c.data, vmin=np.min(c.data), vmax=np.max(c.data), cmap="gray")
                 ax[0].quiver(x, y, quiver_x[i] / nu_x, -quiver_y[i] / nu_y, scale=.25, units='xy')
             else:
                 ax[0].quiver(x, y, quiver_x[i] / nu_x, quiver_y[i] / nu_y, scale=.25, units='xy')
         else:
-            fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-            if c != []:
+            fig, ax = plt.subplots(figsize=(5, 5))
+            if c:
                 ax.imshow(c.data, vmin=np.min(c.data), vmax=np.max(c.data), cmap="gray")
                 ax.quiver(x, y, quiver_x[i] / nu_x, -quiver_y[i] / nu_y, scale=.25, units='xy')
             else:
@@ -129,8 +124,7 @@ def generate_quiver_video(quiver_x, quiver_y, interrogators=None, interrogators_
 
     call([
         'ffmpeg', '-loglevel', 'panic', '-framerate', str(int(1 / dt)), '-i', name + '%02d.png', '-r', '32', '-pix_fmt',
-        'yuv420p',
-                                                                              name + ".mp4", '-y'
+        'yuv420p', name + ".mp4", '-y'
     ])
     for file_name in glob(name + "*.png"):
         remove(file_name)
