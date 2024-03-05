@@ -4,3 +4,4 @@ dist/
 **/PyAWD.egg-info/
 **/.DS_Store
 **/.ipynb_checkpoints
+venv/
