@@ -1,6 +1,6 @@
 # pyawd - Marmousi
 # Tribel Pascal - pascal.tribel@ulb.be
-
+import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from pyawd._marmousi_data import _get_marmousi_data
@@ -13,7 +13,7 @@ class Marmousi:
         - nx: the discretisation of the array.
     """
 
-    def __init__(self, nx):
+    def __init__(self, nx: int = 32):
         self.raw_data = _get_marmousi_data()
         self.raw_nx = self.raw_data.shape[0]
         self.nx = min(nx, self.raw_nx)
