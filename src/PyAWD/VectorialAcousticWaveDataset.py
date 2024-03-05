@@ -16,7 +16,7 @@ COLORS = mcolors.TABLEAU_COLORS
 
 dvt.logger.set_log_level('WARNING')
 
-def solve_vectorial_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
+def solve_vectorial_pde(grid, nx, ndt, ddt, epicenter, velocity_model, max_velocity, f_delay, amplitude_factor):
     """
     Solves the Acoustic Wave Equation for the input parameters
     Arguments:
@@ -36,20 +36,22 @@ def solve_vectorial_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
             ↓
     """
     u = dvt.VectorTimeFunction(name='u', grid=grid, space_order=2, save=ndt, time_order=2)
+    u[0].data[:] = 1e-5*(np.random.random(u[0].data[:].shape)-0.5)
+    u[1].data[:] = 1e-5*(np.random.random(u[1].data[:].shape)-0.5)
     f = dvt.VectorTimeFunction(name='f', grid=grid, space_order=1, save=ndt, time_order=1)
     s_x, s_y = create_explosive_source(nx, x0=epicenter[0], y0=epicenter[1])
-    s_t = np.exp(-(ddt)*(np.arange(ndt)-(ndt//10))**2)
+    s_t = amplitude_factor*np.exp(-(ddt)*(np.arange(ndt)-(f_delay/ddt))**2)
     s_x_t = np.array([s_x*s_t[t] for t in range(len(s_t))])
     s_y_t = np.array([s_y*s_t[t] for t in range(len(s_t))])
     f[0].data[:] = s_x_t
     f[1].data[:] = s_y_t
-    eq = dvt.Eq(u.dt2, f+(velocity_model**2)*(u.laplace))
+    eq = dvt.Eq(u.dt2, f+((max_velocity*velocity_model)**2)*(u.laplace))
     stencil = dvt.solve(eq, u.forward)
     op = dvt.Operator(dvt.Eq(u.forward, stencil), opt='noop')
     op.apply(dt=ddt)
     return np.array([u[0].data, u[1].data])
 
-class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
+class VectorialAcousticWaveDataset():
     """
     A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field.
     Arguments:
@@ -63,7 +65,7 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
             - a tuple (name, max_value) specifying the maximum wave propagation speed in the specified framework
             - an integer, specifying a constant wave propagation speed
     """
-    def __init__(self, size, nx=128, sx=1., ddt=0.01, dt=2, t=10, interrogators=[(0, 0)], velocity_model=("Marmousi", 100)):
+    def __init__(self, size, nx=128, sx=1., ddt=0.01, dt=2, t=10, interrogators=[(0, 0)], velocity_model="Marmousi"):
         try:
             if dt < ddt:
                 raise ValueError('dt should be >= ddt')
@@ -78,12 +80,15 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
             
             self.grid = dvt.Grid(shape=(self.nx, self.nx), extent=(1000., 1000.))
             self.velocity_model = dvt.Function(name='c', grid=self.grid)
-            if type(velocity_model) == tuple:
-                self.velocity_model.data[:] = Marmousi(self.nx).get_data()
-                self.velocity_model.data[:] *= (100/np.max(self.velocity_model.data[:]))
+            if velocity_model == "Marmousi":
+                self.velocity_model.data[:] = Marmousi(self.nx).get_data()*10
+                self.max_velocities = (np.random.random(size)*0.5+0.5)*400
             elif type(velocity_model) == float or type(velocity_model) == int:
                 self.velocity_model.data[:] = velocity_model
+                self.max_velocities = np.ones(size)
             self.epicenters = np.random.randint(-self.nx//2, self.nx//2, size=(self.size, 2)).reshape((self.size, 2))
+            self.force_delay = np.random.random(size)*t
+            self.amplitude_factor = (0.5*np.random.random(size)+0.25)*2
             self.generate_data()
 
             self.cmap = get_black_cmap()
@@ -98,7 +103,7 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
         self.data = []
         self.interrogators_data = {interrogator:[] for interrogator in self.interrogators}
         for i in tqdm(range(self.size)):
-            data = solve_vectorial_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model)
+            data = solve_vectorial_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model, self.max_velocities[i], self.force_delay[i], self.amplitude_factor[i])
             self.data.append(data[:, ::int(self.ndt/self.nt)])
             for interrogator in self.interrogators:
                 self.interrogators_data[interrogator].append(data[:, :, interrogator[1]+(self.nx//2), interrogator[0]+(self.nx//2)])
@@ -128,7 +133,7 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
         for interrogator in self.interrogators:
             colors[interrogator] = list(COLORS.values())[i]
             i += 1
-        epicenter, item = self[idx]
+        epicenter, item, max_velocity, f_delay, amplitude_factor = self[idx]
         fig, ax = plt.subplots(1, self.nt, figsize=(self.nt*3, 3))
         a, b = np.meshgrid(np.arange(self.nx), np.arange(self.nx))
         for i in range(self.nt):
@@ -136,11 +141,10 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
             ax[i].quiver(a, b, item[0][i*(item.shape[1]//self.nt)], -item[1][i*(item.shape[1]//self.nt)], scale=0.25)
             for interrogator in self.interrogators:
                 ax[i].scatter(interrogator[0]+(self.nx//2), interrogator[1]+(self.nx//2), marker="1", color=colors[interrogator])
-            ax[i].set_title("t = " + str(i*(item.shape[1]//self.nt)*self.dt) + "s")
+            ax[i].set_title("t = " + str(i*(item.shape[1]//self.nt)*self.dt) + "s, \nVelocity factor = " + str(max_velocity)[:5] + ", \nForce delay = "+str(f_delay)[:4] + ", \nAmplitude factor = "+str(amplitude_factor)[:4])
             ax[i].axis("off")
         plt.tight_layout()
         plt.show()
-        print(colors)
         
     def plot_interrogators_response(self, idx):
         """
@@ -177,6 +181,7 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
         if len(self.interrogators) > 1:
             for i in range(len(self.interrogators)):
                 ax[i].set_ylim([np.min(y_lims), np.max(y_lims)])
+            fig.suptitle("Velocity factor = " + str(self.max_velocities[idx])[:5] + "\nForce delay = " + str(self.force_delay[idx])[:4] + "\nAmplitude factor = " +str(self.amplitude_factor[idx])[:4])
             plt.tight_layout()
 
     def generate_video(self, idx, filename, nb_images):
@@ -188,8 +193,8 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
                         The video will be stored in a file called `filename`.mp4
             - nb_images: the number of frames used to generate the video. This should be an entire divider of the number of points computed when applying the solving operator
         """
-        u = solve_vectorial_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model)
-        generate_quiver_video(u[0][::self.ndt//(nb_images)], u[1][::self.ndt//(nb_images)], self.interrogators, {i: self.interrogate(idx, i)[:, ::self.ndt//(nb_images)] for i in self.interrogators}, filename, nx=self.nx, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, verbose=True)
+        u = solve_vectorial_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model, max_velocity=self.max_velocities[idx])
+        generate_quiver_video(u[0][::self.ndt//(nb_images)], u[1][::self.ndt//(nb_images)], self.interrogators, {i: self.interrogate(idx, i)[:, ::self.ndt//(nb_images)] for i in self.interrogators}, filename, nx=self.nx, dt=self.ndt*self.ddt/(nb_images), c=self.velocity_model, max_velocity=self.max_velocities[idx], verbose=True)
 
     def set_scaling_factor(self, sx):
         """
@@ -206,4 +211,4 @@ class VectorialAcousticWaveDataset(torch.utils.data.Dataset):
         return self.size
 
     def __getitem__(self, idx):
-        return self.epicenters[idx], self.data[idx][:, :, ::int(1/self.sx), ::int(1/self.sx)]
+        return self.epicenters[idx], self.data[idx][:, :, ::int(1/self.sx), ::int(1/self.sx)], self.max_velocities[idx], self.force_delay[idx], self.amplitude_factor[idx]

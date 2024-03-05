@@ -67,7 +67,7 @@ def generate_video(img, interrogators=None, interrogators_data=None, name="test"
     for file_name in glob(name+"*.png"):
         remove(file_name)
 
-def generate_quiver_video(quiver_x, quiver_y, interrogators=None, interrogators_data=None, name="test", nx=32, dt=0.01, c=[], verbose=False):
+def generate_quiver_video(quiver_x, quiver_y, interrogators=None, interrogators_data=None, name="test", nx=32, dt=0.01, c=[], max_velocity=0, verbose=False):
     """
     Generates a video from a sequence of images.
     Arguments:
@@ -117,7 +117,7 @@ def generate_quiver_video(quiver_x, quiver_y, interrogators=None, interrogators_
                 ax[inter+1].set_title(str(interrogators[inter]))
                 ax[inter+1].set_ylim((np.min(np.array(list(interrogators_data.values()))), np.max(np.array(list(interrogators_data.values())))))
             ax[0].axis('off')
-        fig.suptitle("t = " + str(dt*i)[:4] + "s")
+        fig.suptitle("t = " + str(dt*i)[:4] + "s, velocity factor = "+str(max_velocity)[:5])
         plt.tight_layout()
         plt.savefig(name + "%02d.png" % i, dpi=250)
         plt.close()
