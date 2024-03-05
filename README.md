@@ -63,7 +63,8 @@ dataset = VectorialAcousticWaveDataset(2, nx=250, dt=2, interrogators=[(-10, 0),
 Especially, the `interrogate` method provides measurements along two orthogonal dimensions:
 
 ```python
-dataset.plot_interrogators_data()
+dataset.plot_item(0)
+dataset.plot_interrogators_response(0)
 ```
 
 
