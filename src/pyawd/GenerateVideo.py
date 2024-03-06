@@ -16,7 +16,8 @@ from pyawd.utils import get_black_cmap
 COLORS = TABLEAU_COLORS
 
 
-def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None, interrogators_data: Dict[Tuple: List] = None,
+def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None,
+                   interrogators_data: Dict[Tuple, List] = None,
                    name: str = "test", nx: int = 32, dt: float = 0.01, c: Function = None, verbose: bool = False):
     """
     Generates a video from a sequence of images.
@@ -69,7 +70,7 @@ def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None, in
 
 
 def generate_quiver_video(quiver_x: np.ndarray[float], quiver_y: np.ndarray[float], interrogators: List[Tuple] = None,
-                          interrogators_data: Dict[Tuple: List] = None, name: str = "test", nx: int = 32, dt: float = 0.01,
+                          interrogators_data: Dict[Tuple, List] = None, name: str = "test", nx: int = 32, dt: float = 0.01,
                           c: Function = None, max_velocity: float = 0, verbose: bool = False):
     """
     Generates a video from a sequence of images.

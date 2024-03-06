@@ -6,7 +6,7 @@ import numpy as np
 import devito as dvt
 import matplotlib.pyplot as plt
 from matplotlib.colors import TABLEAU_COLORS
-from numpy import ndarray, dtype, signedinteger, long
+from numpy import ndarray, dtype, signedinteger
 from tqdm.auto import tqdm
 
 from pyawd.GenerateVideo import generate_quiver_video
@@ -18,10 +18,10 @@ dvt.configuration['log-level'] = "WARNING"
 
 
 def solve_vectorial_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float,
-                        epicenter: ndarray[Any, dtype[signedinteger[Any] | long]],
-                        velocity_model: dvt.Function, max_velocity: ndarray[Any, dtype[signedinteger[Any] | long]],
-                        f_delay: ndarray[Any, dtype[signedinteger[Any] | long]],
-                        amplitude_factor: ndarray[Any, dtype[signedinteger[Any] | long]]):
+                        epicenter: ndarray[Any, dtype[signedinteger[Any] | Any]],
+                        velocity_model: dvt.Function, max_velocity: ndarray[Any, dtype[signedinteger[Any] | Any]],
+                        f_delay: ndarray[Any, dtype[signedinteger[Any] | Any]],
+                        amplitude_factor: ndarray[Any, dtype[signedinteger[Any] | Any]]):
     """
     Solves the Acoustic Wave Equation for the input parameters
     Arguments:
@@ -47,7 +47,7 @@ def solve_vectorial_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float,
     u[0].data[:] = 1e-5 * (np.random.random(u[0].data[:].shape) - 0.5)
     u[1].data[:] = 1e-5 * (np.random.random(u[1].data[:].shape) - 0.5)
     f = dvt.VectorTimeFunction(name='f', grid=grid, space_order=1, save=ndt, time_order=1)
-    s_x, s_y = create_explosive_source(nx, x0=epicenter[0], y0=epicenter[1])
+    s_x, s_y = create_explosive_source(nx, x0=int(epicenter[0]), y0=int(epicenter[1]))
     s_t = amplitude_factor * np.exp(-ddt * (np.arange(ndt) - (f_delay / ddt)) ** 2)
     s_x_t = np.array([s_x * s_t[t] for t in range(len(s_t))])
     s_y_t = np.array([s_y * s_t[t] for t in range(len(s_t))])
@@ -152,7 +152,7 @@ class VectorialAcousticWaveDataset:
             colors[interrogator] = list(COLORS.values())[i]
             i += 1
         epicenter, item, max_velocity, f_delay, amplitude_factor = self[idx]
-        fig, ax = plt.subplots(self.nt, figsize=(self.nt * 3, 3))
+        fig, ax = plt.subplots(ncols=self.nt, figsize=(self.nt * 3, 3))
         a, b = np.meshgrid(np.arange(self.nx), np.arange(self.nx))
         for i in range(self.nt):
             ax[i].imshow(self.velocity_model.data[::int(1 / self.sx), ::int(1 / self.sx)],
@@ -181,7 +181,7 @@ class VectorialAcousticWaveDataset:
         for interrogator in self.interrogators:
             colors[interrogator] = list(COLORS.values())[i]
             i += 1
-        fig, ax = plt.subplots(len(self.interrogators), figsize=(len(self.interrogators) * 5, 5))
+        fig, ax = plt.subplots(ncols=len(self.interrogators), figsize=(len(self.interrogators) * 5, 5))
         y_lims = []
         for i in range(len(self.interrogators)):
             data = self.interrogate(idx, self.interrogators[i])
