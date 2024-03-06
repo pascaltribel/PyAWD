@@ -13,6 +13,9 @@ The package (along with the dependencies) is accessible via [PyPI](https://pypi.
 pip install pyawd
 ```
 
+## Documentation
+The API documentation is available [here](https://pascaltribel.github.io/pyawd/).
+
 ## Getting started
 
 Basic imports:
