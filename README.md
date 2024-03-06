@@ -17,8 +17,8 @@ pip install pyawd
 
 Basic imports:
 ```python
-import PyAWD
-from PyAWD.ScalarAcousticWaveDataset import ScalarAcousticWaveDataset
+import pyawd
+from pyawd import ScalarAcousticWaveDataset
 ```
 
 Let us generate a Dataset made of 10 simulations. Each simulation is run in a $250\times 250$ matrix. We store the field state every $2$ seconds and we run the simulation for $10$ seconds:
@@ -54,10 +54,10 @@ dataset.interrogate((0, 0))
 ```
 
 ## More advanced usage
-Using the `VectorialAcousticWaveDataset` class, you can produce simulations in 2D which are more realistic:
+Using the `VectorAcousticWaveDataset` class, you can produce simulations in 2D which are more realistic:
 
 ```python
-dataset = VectorialAcousticWaveDataset(2, nx=250, dt=2, interrogators=[(-10, 0), (10, 0)], t=10)
+dataset = VectorAcousticWaveDataset(2, nx=250, dt=2, interrogators=[(-10, 0), (10, 0)], t=10)
 ```
 
 Especially, the `interrogate` method provides measurements along two orthogonal dimensions:
@@ -78,11 +78,12 @@ Mutliple IPython notebooks are presented in the [examples](examples/) directory.
 jupyter-notebook
 ```
 
-- `ScalarAcousticWaveGeneration.ipynb`: an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation
-- `VectorialAcousticWaveGeneration.ipynb`: an introduction to PDE solving and simulation using Devito applied on the vectorial acoustic wave propagation
+- `ScalarAcousticWavePropagation.ipynb`: an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation
+- `VectorAcousticWavePropagation.ipynb`: an introduction to PDE solving and simulation using Devito applied on the vector acoustic wave propagation
+- `VectorAcousticWaveDataset.ipynb`: an introduction to the VectorAcousticWaveDataset possibilities
 - `Marmousi.ipynb`: a visualisation of the Marmousi velocity field used in the simulations
-- `GenerateAcousticWaveDataset.ipynb`: an example of dataset generation workflow
 - `Interrogators.ipynb`: an introduction to the PyAWD Interrogators usage
+- `GenerateVectorAcousticWaveDataset.ipynb`: how to generate dataset using `pyawd`
 
 ## Related Works:
 - https://essd.copernicus.org/preprints/essd-2023-470/
