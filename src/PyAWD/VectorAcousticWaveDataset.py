@@ -1,11 +1,13 @@
 # pyawd - AcousticWaveDataset
 # Tribel Pascal - pascal.tribel@ulb.be
-from typing import Tuple, List, Any
+from typing import Tuple, List, Dict
 
 import numpy as np
 import devito as dvt
 import matplotlib.pyplot as plt
+import matplotlib.colors
 from matplotlib.colors import TABLEAU_COLORS
+
 from tqdm.auto import tqdm
 import torch.utils.data
 from pyawd.GenerateVideo import generate_quiver_video
@@ -60,7 +62,40 @@ class VectorAcousticWaveDataset(torch.utils.data.Dataset):
     """
     A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field
     """
-
+    size: int
+    """The number of samples to generate in the dataset"""
+    nx: int
+    """The discretisation size of the array (maximum size is currently 955)"""
+    sx: float
+    """The sub-scaling factor of the array (0.5 means $\\frac{1}{2}$ values are returned)"""
+    ddt: float
+    """The time step used for the Operator solving iterations"""
+    dt: float
+    """The time step used for storing the wave propagation step (this should be higher than ddt)"""
+    ndt: int
+    """The number of steps in the simulation, accessible for the interrogators"""
+    t: float
+    """The simulations duration"""
+    nt: int
+    """The number of steps in the simulations, for which the whole simulation is accessible"""
+    interrogators: List[Tuple]
+    """A list containing the coordinates of each interrogator"""
+    interrogators_data: Dict[Tuple, List]
+    """The measurements of each interrogator"""
+    grid: dvt.Grid
+    """The devito Grid on which the equation is solved"""
+    velocity_model: dvt.Function
+    """The propagation speed of the wave"""
+    epicenters: np.ndarray
+    """The epicenter of each simulation"""
+    force_delay: np.ndarray
+    """The delay of apparition of the external force for each simulation"""
+    amplitude_factor: np.ndarray
+    """The amplitude factor to multiply the external force with"""
+    data: np.ndarray
+    """The simulations data"""
+    cmap: matplotlib.colors.LinearSegmentedColormap
+    """The colormap used for displaying the simulations"""
     def __init__(self, size: int, nx: int = 128, sx: float = 1., ddt: float = 0.01, dt: float = 2, t: float = 10,
                  interrogators: List[Tuple] = None, velocity_model: str or int = "Marmousi"):
         """

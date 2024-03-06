@@ -7,17 +7,19 @@ import matplotlib.colors
 import numpy as np
 
 
-def get_white_cmap():
+def get_white_cmap() -> matplotlib.colors.LinearSegmentedColormap:
     """
-    Creates a rose-white-green colormap
+    Returns:
+         (matplotlib.colors.LinearSegmentedColormap): A rose-white-green colormap
     """
     colors = [(1, 0, 0.7, 1), (1, 1, 1, 0.1), (0, 1, 0.7, 1)]
     return matplotlib.colors.LinearSegmentedColormap.from_list('seismic_white', colors)
 
 
-def get_black_cmap():
+def get_black_cmap() -> matplotlib.colors.LinearSegmentedColormap:
     """
-    Creates a rose-black-green colormap
+    Returns:
+         (matplotlib.colors.LinearSegmentedColormap): A rose-black-green colormap
     """
     colors = [(1, 0, 0.7, 1), (0, 0, 0, 0.1), (0, 1, 0.7, 1)]
     return matplotlib.colors.LinearSegmentedColormap.from_list('seismic_black', colors)

@@ -6,18 +6,21 @@ Contains the Marmousi class.
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from pyawd._marmousi_data import get_marmousi_data
+from pyawd._marmousi_data import _get_marmousi_data
 
 
 class Marmousi:
     """
     Represents the Marmousi velocity field. The maximal resolution is (955px*955px).
     """
-
+    nx: int = 32
+    """
+    The width of the field, in pixels
+    """
     def __init__(self, nx: int = 32):
         """
         Args:
-            nx (int): the width of the field, in pixels
+            nx (int): The width of the field, in pixels
         """
         self.raw_data = _get_marmousi_data()
         self.raw_nx = self.raw_data.shape[0]

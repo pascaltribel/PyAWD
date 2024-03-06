@@ -1,9 +1,10 @@
 # pyawd - AcousticWaveDataset
 # Tribel Pascal - pascal.tribel@ulb.be
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 
 import numpy as np
 import devito as dvt
+import matplotlib.colors
 from matplotlib.colors import TABLEAU_COLORS
 import torch.utils.data
 from tqdm.auto import tqdm
@@ -21,12 +22,12 @@ def solve_scalar_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float, epicenter: n
     """
     Solves the Acoustic Wave Equation for the input parameters
     Args:
-        grid (dvt.Grid): a Devito Grid Object
-        nx (int): the discretisation size of the array
-        ndt (int): the number of iteration for which the result is stored
-        ddt (float): the time step used for the Operator solving iterations
-        epicenter (np.ndarray): the epicenter of the Ricker Wavelet at the beginning of the simulation
-        velocity_model (devito.Function): the velocity field across which the wave propagates
+        grid (dvt.Grid): A Devito Grid Object
+        nx (int): The discretisation size of the array
+        ndt (int): The number of iteration for which the result is stored
+        ddt (float): The time step used for the Operator solving iterations
+        epicenter (np.ndarray): The epicenter of the Ricker Wavelet at the beginning of the simulation
+        velocity_model (devito.Function): The velocity field across which the wave propagates
     Returns:
         (numpy.ndarray): A numpy array containing the solutions for the `ndt` simulation steps
     """
@@ -43,17 +44,47 @@ class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
     """
     A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field.
     """
-
-    def __init__(self, size: int, nx: int = 128, sx: float = 1., ddt: float = 0.01, dt: int = 2, t: float = 10, interrogators: List[Tuple] = None):
+    size: int
+    """The number of samples to generate in the dataset"""
+    nx: int
+    """The discretisation size of the array (maximum size is currently 955)"""
+    sx: float
+    """The sub-scaling factor of the array (0.5 means $\\frac{1}{2}$ values are returned)"""
+    ddt: float
+    """The time step used for the Operator solving iterations"""
+    dt: float
+    """The time step used for storing the wave propagation step (this should be higher than ddt)"""
+    ndt: int
+    """The number of steps in the simulation, accessible for the interrogators"""
+    t: float
+    """The simulations duration"""
+    nt: int
+    """The number of steps in the simulations, for which the whole simulation is accessible"""
+    interrogators: List[Tuple]
+    """A list containing the coordinates of each interrogator"""
+    interrogators_data: Dict[Tuple, List]
+    """The measurements of each interrogator"""
+    grid: dvt.Grid
+    """The devito Grid on which the equation is solved"""
+    velocity_model: dvt.Function
+    """The propagation speed of the wave"""
+    epicenters: np.ndarray
+    """The epicenter of each simulation"""
+    data: np.ndarray
+    """The simulations data"""
+    cmap: matplotlib.colors.LinearSegmentedColormap
+    """The colormap used for displaying the simulations"""
+    def __init__(self, size: int, nx: int = 128, sx: float = 1., ddt: float = 0.01, dt: int = 2, t: float = 10,
+                 interrogators: List[Tuple] = None):
         """
         Args:
-            size (int): the number of samples to generate in the dataset
-            nx (int): the discretisation size of the array (maximum size is currently 955)
-            sx (float): the sub-scaling factor of the array (0.5 means $\\frac{1}{2}$ values are returned)
-            ddt (float): the time step used for the Operator solving iterations
-            dt (float): the time step used for storing the wave propagation step (this should be higher than ddt)
-            t (float): the simulations duration
-            interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
+            size (int): The number of samples to generate in the dataset
+            nx (int): The discretisation size of the array (maximum size is currently 955)
+            sx (float): The sub-scaling factor of the array (0.5 means $\\frac{1}{2}$ values are returned)
+            ddt (float): The time step used for the Operator solving iterations
+            dt (float): The time step used for storing the wave propagation step (this should be higher than ddt)
+            t (float): The simulations duration
+            interrogators (List[Tuple]): A list containing the coordinates of each interrogator
         """
         if interrogators is None:
             interrogators = [(0, 0)]
