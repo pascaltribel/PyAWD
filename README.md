@@ -2,11 +2,7 @@
 A package for generating a Pytorch dataset containing simulations of the acoustic wave propagation in the Marmousi velocity field. It uses the [Devito Python Library](https://www.devitoproject.org) to solve the acoustic wave PDE from various random initial conditions.
 
 ## Acoustic Wave Equation
-The equation of propagation of an acoustic wave is given by
-
-<img src="https://latex.codecogs.com/svg.image?\bg{black}\frac{d^2u}{dt^2}=c\nabla^2&space;u&plus;f(x,y)" title="Acoustic wave equation">
-
-where
+The equation of propagation of an acoustic wave is given by $\frac{d^2u}{dt^2} = c \nabla^2 u + f(x, y)$, where
 - $u(x, y)$ is the displacement field, and can be either a scalar or a vector field
 - $c(x, y)$ is the wave  propagation speed
 - $\nabla^2$ is the _laplacian operator_
