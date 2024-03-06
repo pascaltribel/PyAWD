@@ -4,7 +4,7 @@ A package for generating a Pytorch dataset containing simulations of the acousti
 ## Acoustic Wave Equation
 The equation of propagation of an acoustic wave is given by
 
-<img src="https://latex.codecogs.com/svg.image?\bg{white}\frac{d^2u}{dt^2}=c\nabla^2&space;u&plus;f(x,y)" title="Acoustic wave equation">
+<img src="https://latex.codecogs.com/svg.image?\bg{black}\frac{d^2u}{dt^2}=c\nabla^2&space;u&plus;f(x,y)" title="Acoustic wave equation">
 
 where
 - $u(x, y)$ is the displacement field, and can be either a scalar or a vector field
