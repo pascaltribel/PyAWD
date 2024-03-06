@@ -1,6 +1,8 @@
 # pyawd - utils
 # Tribel Pascal - pascal.tribel@ulb.be
-
+"""
+Contains unclassable functions used across the package.
+"""
 import matplotlib.colors
 import numpy as np
 
@@ -21,17 +23,17 @@ def get_black_cmap():
     return matplotlib.colors.LinearSegmentedColormap.from_list('seismic_black', colors)
 
 
-def get_ricker_wavelet(nx: int, a: float = 0.1, x0: int = 0, y0: int = 0, sigma: float = 0.075):
+def get_ricker_wavelet(nx: int, a: float = 0.1, x0: int = 0, y0: int = 0, sigma: float = 0.075) -> np.meshgrid():
     """
     Generates a Ricker Wavelet
-    Arguments:
-        - nx: the grid size on which the wavelet is created
-        - A: the scaling factor
-        - x0: the center x coordinate (the grid is assumed to be centered in (0, 0))
-        - y0: the center y coordinate (the grid is assumed to be centered in (0, 0))
-        - sigma: the spreading factor
+    Args:
+        nx (int): The grid size on which the wavelet is created
+        a (float): The scaling factor
+        x0 (int): The center x coordinate (the grid is assumed to be centered in `(0, 0)`)
+        y0 (int): The center y coordinate (the grid is assumed to be centered in `(0, 0)`)
+        sigma (float): The spreading factor
     Returns:
-        - a numpy array containing the generated Ricker Wavelet
+        (numpy.meshgrid): A numpy meshgrid containing the generated Ricker Wavelet
     """
     x = np.arange(-1. - x0 / (0.5 * nx), 1. - x0 / (0.5 * nx), 2 / nx)
     y = np.arange(-1. - y0 / (0.5 * nx), 1. - y0 / (0.5 * nx), 2 / nx)
@@ -39,17 +41,18 @@ def get_ricker_wavelet(nx: int, a: float = 0.1, x0: int = 0, y0: int = 0, sigma:
     return a * (2 - x ** 2 - y ** 2) * np.exp(-(x ** 2 + y ** 2) / (2 * sigma ** 2))
 
 
-def create_inverse_distance_matrix(nx: int, x0: int = 0, y0: int = 0, z0: int = 0, tau: float = None, dim: int = 2):
+def create_inverse_distance_matrix(nx: int, x0: int = 0, y0: int = 0, z0: int = 0, tau: float = None, dim: int = 2) -> np.meshgrid:
     """
-    Creates an 1/distance matrix centered around (x0, y0)
-    Arguments:
-        - nx: the grid size on which the wavelet is created
-        - x0: the center x coordinate (the grid is assumed to be centered in (0, 0))
-        - y0: the center y coordinate (the grid is assumed to be centered in (0, 0))
-        - tau: the distance threshold around (x0, y0) after which the distances are set to 0
-        - dim: the number of dimensions of the generated field (2 or 3)
+    Creates an $\\frac{1}{distance}$ matrix centered around `(x0, y0)`
+    Args:
+        nx (int): The grid size on which the wavelet is created
+        x0 (int): The center x coordinate (the grid is assumed to be centered in `(0, 0)`)
+        y0 (int): The center y coordinate (the grid is assumed to be centered in `(0, 0)`)
+        z0 (int): The center z coordinate (the grid is assumed to be centered in `(0, 0, 0)`)
+        tau (float): The distance threshold around (x0, y0) after which the distances are set to 0
+        dim (int): The number of dimensions of the generated field (2 or 3)
     Returns:
-        - a numpy array containing the generated explosive source
+        (numpy.meshgrid): A numpy meshgrid containing the generated explosive source
     """
     distance = np.array([])
     if not tau:
@@ -68,18 +71,18 @@ def create_inverse_distance_matrix(nx: int, x0: int = 0, y0: int = 0, z0: int = 
     return distance
 
 
-def create_explosive_source(nx: int, x0: int = 0, y0: int = 0, z0: int = 0, tau: float = None, dim: int = 2):
+def create_explosive_source(nx: int, x0: int = 0, y0: int = 0, z0: int = 0, tau: float = None, dim: int = 2) -> np.meshgrid:
     """
-    Creates an explosive source (1/distance up to nx//10) centered around (x0, y0)
-    Arguments:
-        - nx: the grid size on which the wavelet is created
-        - x0: the center x coordinate (the grid is assumed to be centered in (0, 0))
-        - y0: the center y coordinate (the grid is assumed to be centered in (0, 0))
-        - dim: the number of dimensions of the generated field (2 or 3)
+    Creates an explosive source ($\\frac{1}{distance}$ up to $\\lfloor\\frac{nx}{10}\\rfloor$) centered around `(x0, y0)`
+    Args:
+        nx (int): the grid size on which the wavelet is created
+        x0 (int): the center x coordinate (the grid is assumed to be centered in `(0, 0)`)
+        y0 (int): the center y coordinate (the grid is assumed to be centered in `(0, 0)`)
+        dim (int): the number of dimensions of the generated field (2 or 3)
     Returns:
-        - a numpy array containing the generated explosive source
+        (numpy.meshgrid): A numpy meshgrid containing the generated explosive source
     """
-    res = 0
+    res = np.array([])
     if not tau:
         tau = nx // 10
     if dim == 2:

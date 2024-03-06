@@ -1,9 +1,9 @@
 # pyawd - AcousticWaveDataset
 # Tribel Pascal - pascal.tribel@ulb.be
+from typing import Tuple, List
 
 import numpy as np
 import devito as dvt
-import matplotlib.pyplot as plt
 from matplotlib.colors import TABLEAU_COLORS
 import torch.utils.data
 from tqdm.auto import tqdm
@@ -17,18 +17,18 @@ COLORS = TABLEAU_COLORS
 dvt.configuration['log-level'] = 'WARNING'
 
 
-def solve_scalar_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
+def solve_scalar_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float, epicenter: np.ndarray, velocity_model: dvt.Function) -> np.ndarray:
     """
     Solves the Acoustic Wave Equation for the input parameters
-    Arguments:
-        - grid: a Devito Grid Object
-        - nx: the discretisation size of the array
-        - ndt: the number of iteration for which the result is stored
-        - ddt: the time step used for the Operator solving iterations
-        - epicenter: the epicenter of the Ricker Wavelet at the beginning of the simulation
-        - velocity_model: the velocity field across which the wave propagates
+    Args:
+        grid (dvt.Grid): a Devito Grid Object
+        nx (int): the discretisation size of the array
+        ndt (int): the number of iteration for which the result is stored
+        ddt (float): the time step used for the Operator solving iterations
+        epicenter (np.ndarray): the epicenter of the Ricker Wavelet at the beginning of the simulation
+        velocity_model (devito.Function): the velocity field across which the wave propagates
     Returns:
-        - u: a Devito TimeFunction containing the solutions for the `ndt` steps
+        (numpy.ndarray): A numpy array containing the solutions for the `ndt` simulation steps
     """
     u = dvt.TimeFunction(name='u', grid=grid, space_order=2, save=ndt, time_order=2)
     u.data[:] = get_ricker_wavelet(nx, x0=epicenter[0], y0=epicenter[1])
@@ -42,16 +42,19 @@ def solve_scalar_pde(grid, nx, ndt, ddt, epicenter, velocity_model):
 class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
     """
     A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field.
-    Arguments:
-        - size: the number of samples to generate in the dataset
-        - nx: the discretisation size of the array (maximum size is currently 955)
-        - sx: the sub-scaling factor of the array (0.5 means 1/2 values are returned)
-        - ddt: the time step used for the Operator solving iterations
-        - dt: the time step used for storing the wave propagation step (this should be higher than ddt)
-        - t: the simulations duration
     """
 
-    def __init__(self, size, nx=128, sx=1., ddt=0.01, dt=2, t=10, interrogators=None):
+    def __init__(self, size: int, nx: int = 128, sx: float = 1., ddt: float = 0.01, dt: int = 2, t: float = 10, interrogators: List[Tuple] = None):
+        """
+        Args:
+            size (int): the number of samples to generate in the dataset
+            nx (int): the discretisation size of the array (maximum size is currently 955)
+            sx (float): the sub-scaling factor of the array (0.5 means $\\frac{1}{2}$ values are returned)
+            ddt (float): the time step used for the Operator solving iterations
+            dt (float): the time step used for storing the wave propagation step (this should be higher than ddt)
+            t (float): the simulations duration
+            interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
+        """
         if interrogators is None:
             interrogators = [(0, 0)]
         try:
@@ -95,12 +98,13 @@ class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
                     data[:, interrogator[0] + (self.nx // 2), -interrogator[1] + (self.nx // 2)])
         self.data = np.array(self.data)
 
-    def interrogate(self, idx, point):
+    def interrogate(self, idx: int, point: Tuple) -> np.ndarray:
         """
-        Returns the amplitude measurements for the interrogator at coordinates `point` for the `idx`th sample. 
-        Arguments:
-            - idx: the number of the sample to interrogate
-            - point: the interrogator position as a Tuple
+        Args:
+            idx (int): the number of the sample to interrogate
+            point (Tuple): the interrogator position as a Tuple
+        Returns:
+             (np.ndarray): The amplitude measurements for the interrogator at coordinates `point` for the `idx`th sample
         """
         if point not in self.interrogators_data:
             print("Error: the interrogated point is not interrogable.")
@@ -108,11 +112,11 @@ class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
         else:
             return self.interrogators_data[point][idx]
 
-    def plot_item(self, idx):
+    def plot_item(self, idx: int):
         """
-        Plots the simulation of the idx^th sample
-        Arguments:
-            - idx: the number of the sample to plot
+        Plots the simulation of the $idx^{th}$ sample
+        Args:
+            idx (int): the number of the sample to plot
         """
         colors = {}
         i = 0
@@ -138,11 +142,11 @@ class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
         plt.tight_layout()
         plt.show()
 
-    def plot_interrogators_response(self, idx):
+    def plot_interrogators_response(self, idx: int):
         """
-        Plots the measurements taken by the interrogators for the idx^th sample.
-        Arguments:
-            - idx: the number of the sample to plot
+        Plots the measurements taken by the interrogators for the $idx^{th}$ sample.
+        Args:
+            idx (int): the number of the sample to plot
         """
         colors = {}
         i = 0
@@ -156,14 +160,14 @@ class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
         plt.legend([str(i) for i in self.interrogators])
         plt.title("Amplitude measurement for each interrogator")
 
-    def generate_video(self, idx, filename, nb_images):
+    def generate_video(self, idx: int, filename: str, nb_images: int):
         """
-        Generates a video representing the simulation of the idx^th sample propagation
+        Generates a video representing the simulation of the $idx^{th}$ sample propagation
         Arguments:
-            - idx: the number of the sample to simulate in the video
-            - filename: the name of the video output file (without extension)
+            idx (int): the number of the sample to simulate in the video
+            filename (str): the name of the video output file (without extension)
                         The video will be stored in a file called `filename`.mp4
-            - nb_images: the number of frames used to generate the video. This should be an entire divider of the number
+            nb_images (int): the number of frames used to generate the video. This should be an entire divider of the number
                          of points computed when applying the solving operator
         """
         u = solve_scalar_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model)
@@ -171,11 +175,11 @@ class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
                        {i: self.interrogators_data[i][idx][::self.ndt // nb_images] for i in self.interrogators},
                        filename, nx=self.nx, dt=self.ndt * self.ddt / nb_images, c=self.velocity_model, verbose=True)
 
-    def set_scaling_factor(self, sx):
+    def set_scaling_factor(self, sx: float):
         """
-        Fixes a new scaling factor (0.5 means 1/2 values are returned). It should be <= 1.
-        Arguments:
-            - sx: the new scaling factor
+        Fixes a new scaling factor (0.5 means $\\frac{1}{2}$ values are returned). It should be <= 1.
+        Args:
+            sx (float): the new scaling factor
         """
         if sx <= 1.:
             self.sx = sx
@@ -183,7 +187,15 @@ class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
             print("The scaling factor should be lower or equal to 1.")
 
     def __len__(self):
+        """
+        Returns:
+            (int): The number of simulations in the dataset
+        """
         return self.size
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
+        """
+        Returns:
+            (Tuple): The epicenter and the simulation of the `idx`th sample
+        """
         return self.epicenters[idx], self.data[idx][:, ::int(1 / self.sx), ::int(1 / self.sx)]

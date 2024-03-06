@@ -19,13 +19,13 @@ from pyawd.utils import get_black_cmap
 COLORS = TABLEAU_COLORS
 
 
-def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None,
+def generate_video(img: np.ndarray, interrogators: List[Tuple] = None,
                    interrogators_data: Dict[Tuple, List] = None,
                    name: str = "test", nx: int = 32, dt: float = 0.01, c: Function = None, verbose: bool = False):
     """
     Generates a video from a sequence of images, with a scalar value on each point.
     Args:
-        img (numpy.ndarray[float]): A sequence of np.arrays containing the wave state at every timestep
+        img (numpy.ndarray): A sequence of np.arrays containing the wave state at every timestep
         interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
         interrogators_data (Dict[Tuple, List]): Couples of interrogators coordinates associated with their measured data
         name (str): The name of the file to save the data to, without the `.mp4` extension
@@ -81,21 +81,21 @@ def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None,
         remove(file_name)
 
 
-def generate_quiver_video(quiver_x: np.ndarray[float], quiver_y: np.ndarray[float], interrogators: List[Tuple] = None,
+def generate_quiver_video(quiver_x: np.ndarray, quiver_y: np.ndarray, interrogators: List[Tuple] = None,
                           interrogators_data: Dict[Tuple, List] = None, name: str = "test", nx: int = 32, dt: float = 0.01,
-                          c: Function = None, max_velocity: float = 0, verbose: bool = False):
+                          c: Function = None, max_velocity: np.ndarray = 0, verbose: bool = False):
     """
     Generates a video from a sequence of images, with a vector value on each point.
     Args:
-        quiver_x (numpy.ndarray[float]): A sequence of np.arrays containing the wave x vector coordinate at every timestep
-        quiver_y (numpy.ndarray[float]): A sequence of np.arrays containing the wave y vector coordinate at every timestep
+        quiver_x (numpy.ndarray): A sequence of np.arrays containing the wave x vector coordinate at every timestep
+        quiver_y (numpy.ndarray): A sequence of np.arrays containing the wave y vector coordinate at every timestep
         interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
         interrogators_data (Dict[Tuple, List]): Couples of interrogators coordinates associated with their measured data
         name (str): The name of the file to save the data to, without the `.mp4` extension
         nx (int): The width of the plane to display (it is assumed to be a squared plane)
         dt (float): The size of the timestep between two subsequent images
         c (devito.Function): A function of space representing the wave propagation speed in each spatial point
-        max_velocity (float): The maximal speed of propagation
+        max_velocity (np.ndarray): The maximal speed of propagation
         verbose (bool): Gives information about the video generation
     """
     if c is None:
