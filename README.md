@@ -5,7 +5,7 @@ A package for generating a Pytorch dataset containing simulations of the acousti
 The equation of propagation of an acoustic wave is given by
 
 ```
-$$\frac{d^2 u}{dt^2} = c \nabla^2 u + f(x, y)$$
+$\frac{d^2 u}{dt^2} = c \nabla^2 u + f(x, y)$
 ```
 
 where
