@@ -17,6 +17,7 @@ pip install pyawd
 
 ## Documentation
 The API documentation is available [here](https://pascaltribel.github.io/pyawd/).
+Basic help is provided for each class and function, and is accessible via the Python `help()` function.
 
 ## Getting started
 
@@ -72,9 +73,6 @@ dataset.plot_item(0)
 dataset.plot_interrogators_response(0)
 ```
 
-
-## Documentation
-Basic help is provided for each class and function, and is accessible via the Python `help()` function.
 
 ## Examples
 Mutliple IPython notebooks are presented in the [examples](examples/) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
