@@ -1,5 +1,8 @@
 # pyawd - Marmousi
 # Tribel Pascal - pascal.tribel@ulb.be
+"""
+Gathers functions to generate videos from a given simulation.
+"""
 from typing import Tuple, List, Dict
 
 import matplotlib.pyplot as plt
@@ -20,7 +23,16 @@ def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None,
                    interrogators_data: Dict[Tuple, List] = None,
                    name: str = "test", nx: int = 32, dt: float = 0.01, c: Function = None, verbose: bool = False):
     """
-    Generates a video from a sequence of images.
+    Generates a video from a sequence of images, with a scalar value on each point.
+    Args:
+        img (numpy.ndarray[float]): A sequence of np.arrays containing the wave state at every timestep
+        interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
+        interrogators_data (Dict[Tuple, List]): Couples of interrogators coordinates associated with their measured data
+        name (str): The name of the file to save the data to, without the `.mp4` extension
+        nx (int): The width of the plane to display (it is assumed to be a squared plane)
+        dt (float): The size of the timestep between two subsequent images
+        c (devito.Function): A function of space representing the wave propagation speed in each spatial point
+        verbose (bool): Gives information about the video generation
     """
     colors = {}
     i = 0
@@ -29,7 +41,7 @@ def generate_video(img: np.ndarray[float], interrogators: List[Tuple] = None,
             colors[interrogator] = list(COLORS.values())[i]
             i += 1
     if verbose:
-        print("Generating", len(img), "images.")
+        print("Generating", len(img), "images and saving to " + name + ".mp4.")
     for i in tqdm(range(len(img))):
         if interrogators:
             fig, ax = plt.subplots(ncols=2, figsize=(10, 5), gridspec_kw={'width_ratios': [1, 1]})
@@ -73,7 +85,18 @@ def generate_quiver_video(quiver_x: np.ndarray[float], quiver_y: np.ndarray[floa
                           interrogators_data: Dict[Tuple, List] = None, name: str = "test", nx: int = 32, dt: float = 0.01,
                           c: Function = None, max_velocity: float = 0, verbose: bool = False):
     """
-    Generates a video from a sequence of images.
+    Generates a video from a sequence of images, with a vector value on each point.
+    Args:
+        quiver_x (numpy.ndarray[float]): A sequence of np.arrays containing the wave x vector coordinate at every timestep
+        quiver_y (numpy.ndarray[float]): A sequence of np.arrays containing the wave y vector coordinate at every timestep
+        interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
+        interrogators_data (Dict[Tuple, List]): Couples of interrogators coordinates associated with their measured data
+        name (str): The name of the file to save the data to, without the `.mp4` extension
+        nx (int): The width of the plane to display (it is assumed to be a squared plane)
+        dt (float): The size of the timestep between two subsequent images
+        c (devito.Function): A function of space representing the wave propagation speed in each spatial point
+        max_velocity (float): The maximal speed of propagation
+        verbose (bool): Gives information about the video generation
     """
     if c is None:
         c = []

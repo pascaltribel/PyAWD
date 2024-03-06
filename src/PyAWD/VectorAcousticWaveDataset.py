@@ -17,11 +17,11 @@ COLORS = TABLEAU_COLORS
 dvt.configuration['log-level'] = "WARNING"
 
 
-def solve_vectorial_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float,
-                        epicenter: ndarray[Any, dtype[signedinteger[Any] | Any]],
-                        velocity_model: dvt.Function, max_velocity: ndarray[Any, dtype[signedinteger[Any] | Any]],
-                        f_delay: ndarray[Any, dtype[signedinteger[Any] | Any]],
-                        amplitude_factor: ndarray[Any, dtype[signedinteger[Any] | Any]]):
+def solve_vector_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float,
+                     epicenter: ndarray[Any, dtype[signedinteger[Any] | Any]],
+                     velocity_model: dvt.Function, max_velocity: ndarray[Any, dtype[signedinteger[Any] | Any]],
+                     f_delay: ndarray[Any, dtype[signedinteger[Any] | Any]],
+                     amplitude_factor: ndarray[Any, dtype[signedinteger[Any] | Any]]):
     """
     Solves the Acoustic Wave Equation for the input parameters
     Arguments:
@@ -60,7 +60,7 @@ def solve_vectorial_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float,
     return np.array([u[0].data, u[1].data])
 
 
-class VectorialAcousticWaveDataset:
+class VectorAcousticWaveDataset:
     """
     A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field.
     Arguments:
@@ -119,8 +119,8 @@ class VectorialAcousticWaveDataset:
         self.data = []
         self.interrogators_data = {interrogator: [] for interrogator in self.interrogators}
         for i in tqdm(range(self.size)):
-            data = solve_vectorial_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model,
-                                       self.max_velocities[i], self.force_delay[i], self.amplitude_factor[i])
+            data = solve_vector_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[i], self.velocity_model,
+                                    self.max_velocities[i], self.force_delay[i], self.amplitude_factor[i])
             self.data.append(data[:, ::int(self.ndt / self.nt)])
             for interrogator in self.interrogators:
                 self.interrogators_data[interrogator].append(
@@ -221,9 +221,9 @@ class VectorialAcousticWaveDataset:
             - nb_images: the number of frames used to generate the video. This should be an entire divider of the number
                           of points computed when applying the solving operator
         """
-        u = solve_vectorial_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model,
-                                max_velocity=self.max_velocities[idx], f_delay=self.force_delay[idx],
-                                amplitude_factor=self.amplitude_factor[idx])
+        u = solve_vector_pde(self.grid, self.nx, self.ndt, self.ddt, self.epicenters[idx], self.velocity_model,
+                             max_velocity=self.max_velocities[idx], f_delay=self.force_delay[idx],
+                             amplitude_factor=self.amplitude_factor[idx])
         generate_quiver_video(u[0][::self.ndt // nb_images], u[1][::self.ndt // nb_images], self.interrogators,
                               {i: self.interrogate(idx, i)[:, ::self.ndt // nb_images] for i in self.interrogators},
                               filename, nx=self.nx, dt=self.ndt * self.ddt / nb_images, c=self.velocity_model,
