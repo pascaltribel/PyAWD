@@ -1,10 +1,18 @@
 # PyAWD: a Python acoustic wave propagation dataset using PyTorch and Devito
 A package for generating a Pytorch dataset containing simulations of the acoustic wave propagation in the Marmousi velocity field. It uses the [Devito Python Library](https://www.devitoproject.org) to solve the acoustic wave PDE from various random initial conditions.
 
-## Marmousi velocity field
-The Marmousi velocity field used in the simulation is a subset of the following:
+## Acoustic Wave Equation
+The equation of propagation of an acoustic wave is given by
 
-<img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg" alt="Marmousi velocity field" width="40%"/>
+```
+$$\frac{d^2 u}{dt^2} = c \nabla^2 u + f(x, y)$$
+```
+
+where
+- $u(x, y)$ is the displacement field, and can be either a scalar or a vector field
+- $c(x, y)$ is the wave  propagation speed
+- $\nabla^2$ is the _laplacian operator_
+- $f(x, y)$ is an external force applied on the system, for which the value can vary through time
 
 ## Installation
 The package (along with the dependencies) is accessible via [PyPI](https://pypi.org/project/PyAWD/):
@@ -87,6 +95,12 @@ jupyter-notebook
 - `Marmousi.ipynb`: a visualisation of the Marmousi velocity field used in the simulations
 - `Interrogators.ipynb`: an introduction to the PyAWD Interrogators usage
 - `GenerateVectorAcousticWaveDataset.ipynb`: how to generate dataset using `pyawd`
+
+
+## Marmousi velocity field
+The Marmousi velocity field used in the simulation is a subset of the following:
+
+<img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg" alt="Marmousi velocity field" width="40%"/>
 
 ## Related Works:
 - https://essd.copernicus.org/preprints/essd-2023-470/
