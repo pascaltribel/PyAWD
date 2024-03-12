@@ -38,24 +38,17 @@ Let us generate a Dataset made of 10 simulations. Each simulation is run in a $2
 dataset = ScalarAcousticWaveDataset(2, nx=250, dt=2, t=10)
 ```
 
-Then we plot the first simulation. The &#128960; character shows the interrogator position:
+Then we plot the first simulation.
 
 ```python
 dataset.plot_item(0)
 ```
-
-Which outputs the following figure:
-![Example of simulation output](examples/example.png)
 
 Finally, we can generate a video of this simulation. We will use $200$ frames, which yields a final rate of $20 fps$:
 
 ```python
 dataset.generate_video(0, "example", 200)
 ```
-
-This produces the following video (stored in the file `example.mp4`):
-
-![Example of simulation output](examples/dataset_generation.gif)
 
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
@@ -92,12 +85,6 @@ jupyter-notebook
 - `Marmousi.ipynb`: a visualisation of the Marmousi velocity field used in the simulations
 - `Interrogators.ipynb`: an introduction to the PyAWD Interrogators usage
 - `GenerateVectorAcousticWaveDataset.ipynb`: how to generate dataset using `pyawd`
-
-
-## Marmousi velocity field
-The Marmousi velocity field used in the simulation is a subset of the following:
-
-<img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg" alt="Marmousi velocity field" width="40%"/>
 
 ## Related Works:
 - https://essd.copernicus.org/preprints/essd-2023-470/

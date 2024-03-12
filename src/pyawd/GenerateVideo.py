@@ -142,7 +142,7 @@ def generate_quiver_video(quiver_x: np.ndarray, quiver_y: np.ndarray, interrogat
 def generate_density_video(quiver_x: np.ndarray, quiver_y: np.ndarray, quiver_z: np.ndarray,
                            interrogators: List[Tuple] = None,
                            interrogators_data: Dict[Tuple, List] = None, name: str = "test", nx: int = 32,
-                           dx: float= 1000./32, dt: float = 0.01):
+                           dx: float = 1000./32, dt: float = 0.01):
     """
     Generates a video from a sequence of images, with a vector value on each point.
     Args:
@@ -153,7 +153,7 @@ def generate_density_video(quiver_x: np.ndarray, quiver_y: np.ndarray, quiver_z:
         interrogators_data (Dict[Tuple, List]): Couples of interrogators coordinates associated with their measured data
         name (str): The name of the file to save the data to, without the `.mp4` extension
         nx (int): The width of the plane to display (it is assumed to be a squared plane)
-        dx (flaot): The distance between each neighbour spatial point
+        dx (float): The distance between each neighbour spatial point
         dt (float): The size of the timestep between two subsequent images
     """
     lengths = np.sqrt(quiver_x**2 + quiver_y**2 + quiver_z**2)*np.sign(np.mean([quiver_x, quiver_y, quiver_z], axis=0))
