@@ -11,7 +11,7 @@ from pyawd._marmousi_data import _get_marmousi_data
 
 class Marmousi:
     """
-    Represents the Marmousi velocity field. The maximal resolution is (955px*955px).
+    Represents the Marmousi velocity field. The maximal resolution is (955px*955px). This is only available in 2D.
     """
     nx: int = 32
     """

@@ -80,6 +80,8 @@ def create_explosive_source(nx: int, x0: int = 0, y0: int = 0, z0: int = 0, tau:
         nx (int): the grid size on which the wavelet is created
         x0 (int): the center x coordinate (the grid is assumed to be centered in `(0, 0)`)
         y0 (int): the center y coordinate (the grid is assumed to be centered in `(0, 0)`)
+        z0 (int): the center z coordinate (the grid is assumed to be centered in `(0, 0)`)
+        tau (float): the width of the explosive source
         dim (int): the number of dimensions of the generated field (2 or 3)
     Returns:
         (numpy.meshgrid): A numpy meshgrid containing the generated explosive source

@@ -42,7 +42,7 @@ def solve_scalar_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float, epicenter: n
 
 class ScalarAcousticWaveDataset(torch.utils.data.Dataset):
     """
-    A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field.
+    A Pytorch dataset containing acoustic waves propagating in the Marmousi velocity field. This dataset can only build 2D simulations.
     """
     size: int
     """The number of samples to generate in the dataset"""
