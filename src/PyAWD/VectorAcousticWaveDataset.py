@@ -43,10 +43,10 @@ def solve_vector_pde(grid: dvt.Grid, nx: int, ndt: int, ddt: float, epicenter: n
     """
     u = dvt.VectorTimeFunction(name='u', grid=grid, space_order=2, save=ndt, time_order=2)
 
-    u[0].data[0] = 1e-5 * (np.random.random(u[0].data[0].shape) - 0.5)
-    u[1].data[0] = 1e-5 * (np.random.random(u[1].data[0].shape) - 0.5)
+    u[0].data[:] = 1e-5 * (np.random.random(u[0].data[:].shape) - 0.5)
+    u[1].data[:] = 1e-5 * (np.random.random(u[1].data[:].shape) - 0.5)
     if dim == 3:
-        u[2].data[0] = 1e-5 * (np.random.random(u[1].data[0].shape) - 0.5)
+        u[2].data[:] = 1e-5 * (np.random.random(u[1].data[:].shape) - 0.5)
     f = dvt.VectorTimeFunction(name='f', grid=grid, space_order=1, save=ndt, time_order=1)
     s_t = amplitude_factor * np.exp(-ddt * (np.arange(ndt) - (f_delay / ddt)) ** 2)
     if dim == 2:

@@ -112,16 +112,18 @@ def generate_quiver_video(quiver_x: np.ndarray, quiver_y: np.ndarray, interrogat
                 colors[interrogator] = list(COLORS.values())[i]
                 i += 1
         if verbose:
-            print("Generating", len(quiver_x), "images.")
+            print("Generating", len(quiver_x), "images and saving to `" + name + ".mp4`.")
+        nu_x = np.max(quiver_x)
+        nu_y = np.max(quiver_y)
         for i in tqdm(range(len(quiver_x))):
             fig = plt.figure()
             a, b = np.meshgrid(np.arange(nx), np.arange(nx))
             ax = fig.add_subplot(1, 1, 1)
             ax.imshow(c.data[:], vmin=np.min(c.data[:]), vmax=np.max(c.data[:]), cmap="gray")
-            ax.quiver(a, b, quiver_x[i], -quiver_y[i], scale=0.25)
+            ax.quiver(a, b, quiver_x[i]/nu_x, -quiver_y[i]/nu_y)
             for interrogator in interrogators:
                 ax.scatter(interrogator[0] + (nx // 2), interrogator[1] + (nx // 2), marker="1",
-                              color=colors[interrogator])
+                           color=colors[interrogator])
             ax.set_title("t = " + str(i * dt) + "s")
             ax.axis("off")
             fig.suptitle("t = " + str(dt * i)[:4] + "s, velocity factor = " + str(max_velocity)[:5])
