@@ -83,65 +83,67 @@ def generate_video(img: np.ndarray, interrogators: List[Tuple] = None,
 
 
 def generate_quiver_video(quiver_x: np.ndarray, quiver_y: np.ndarray, interrogators: List[Tuple] = None,
-                          interrogators_data: Dict[Tuple, List] = None, name: str = "test", nx: int = 32, dt: float = 0.01,
-                          c: Function = None, max_velocity: np.ndarray = 0, dim: int = 2,verbose: bool = False):
+                          interrogators_data: Dict[Tuple, np.ndarray] = None, name: str = "test", nx: int = 32, dt: float = 0.01,
+                          c: Function = None, max_velocity: np.ndarray = 0,
+                          display_velocity_model: bool = True,verbose: bool = False):
     """
     Generates a video from a sequence of images, with a vector value on each point.
     Args:
         quiver_x (numpy.ndarray): A sequence of np.arrays containing the wave x vector coordinate at every timestep
         quiver_y (numpy.ndarray): A sequence of np.arrays containing the wave y vector coordinate at every timestep
         interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
-        interrogators_data (Dict[Tuple, List]): Couples of interrogators coordinates associated with their measured data
+        interrogators_data (Dict[Tuple, numpy.ndarray]): Couples of interrogators coordinates associated with their measured data
         name (str): The name of the file to save the data to, without the `.mp4` extension
         nx (int): The width of the plane to display (it is assumed to be a squared plane)
         dt (float): The size of the timestep between two subsequent images
         c (devito.Function): A function of space representing the wave propagation speed in each spatial point
         max_velocity (np.ndarray): The maximal speed of propagation
-        dim (int): The number of dimensions of the simulations (2 or 3)
+        display_velocity_model (bool): Display the velocity in background or not
         verbose (bool): Gives information about the video generation
     """
-    if dim == 3:
-        print("Quiver video is only available in 2D.")
-    if dim == 2:
-        if c is None:
-            c = []
-        colors = {}
-        i = 0
-        if interrogators:
-            for interrogator in interrogators:
-                colors[interrogator] = list(COLORS.values())[i]
-                i += 1
-        if verbose:
-            print("Generating", len(quiver_x), "images and saving to `" + name + ".mp4`.")
-        nu_x = np.max(quiver_x)
-        nu_y = np.max(quiver_y)
-        for i in tqdm(range(len(quiver_x))):
-            fig = plt.figure()
-            a, b = np.meshgrid(np.arange(nx), np.arange(nx))
-            ax = fig.add_subplot(1, 1, 1)
+    if c is None:
+        c = []
+    colors = {}
+    i = 0
+    if interrogators:
+        for interrogator in interrogators:
+            colors[interrogator] = list(COLORS.values())[i]
+            i += 1
+    if verbose:
+        print("Generating", len(quiver_x), "images and saving to `" + name + ".mp4`.")
+    nu_x = np.max(quiver_x)
+    print(nu_x)
+    nu_y = np.max(quiver_y)
+    for i in tqdm(range(len(quiver_x))):
+        fig = plt.figure()
+        a, b = np.meshgrid(np.arange(nx), np.arange(nx))
+        ax = fig.add_subplot(1, 1, 1)
+        if display_velocity_model:
             ax.imshow(c.data[:], vmin=np.min(c.data[:]), vmax=np.max(c.data[:]), cmap="gray")
             ax.quiver(a, b, quiver_x[i]/nu_x, -quiver_y[i]/nu_y)
-            for interrogator in interrogators:
-                ax.scatter(interrogator[0] + (nx // 2), interrogator[1] + (nx // 2), marker="1",
-                           color=colors[interrogator])
-            ax.set_title("t = " + str(i * dt) + "s")
-            ax.axis("off")
-            fig.suptitle("t = " + str(dt * i)[:4] + "s, velocity factor = " + str(max_velocity)[:5])
-            plt.tight_layout()
-            plt.savefig(name + "%02d.png" % i, dpi=250)
-            plt.close()
+        else:
+            ax.quiver(a, b, quiver_x[i] / nu_x, quiver_y[i] / nu_y)
+        for interrogator in interrogators:
+            ax.scatter(interrogator[0] + (nx // 2), interrogator[1] + (nx // 2), marker="1",
+                       color=colors[interrogator])
+        ax.set_title("t = " + str(i * dt) + "s")
+        ax.axis("off")
+        fig.suptitle("t = " + str(dt * i)[:4] + "s, velocity factor = " + str(max_velocity)[:5])
+        plt.tight_layout()
+        plt.savefig(name + "%02d.png" % i, dpi=250)
+        plt.close()
 
-        call([
-            'ffmpeg', '-loglevel', 'panic', '-framerate', str(int(1 / dt)), '-i', name + '%02d.png', '-r', '32', '-pix_fmt',
-            'yuv420p', name + ".mp4", '-y'
-        ])
-        for file_name in glob(name + "*.png"):
-            remove(file_name)
+    call([
+        'ffmpeg', '-loglevel', 'panic', '-framerate', str(int(1 / dt)), '-i', name + '%02d.png', '-r', '32', '-pix_fmt',
+        'yuv420p', name + ".mp4", '-y'
+    ])
+    for file_name in glob(name + "*.png"):
+        remove(file_name)
 
 
 def generate_density_video(quiver_x: np.ndarray, quiver_y: np.ndarray, quiver_z: np.ndarray,
                            interrogators: List[Tuple] = None,
-                           interrogators_data: Dict[Tuple, List] = None, name: str = "test", nx: int = 32,
+                           interrogators_data: Dict[Tuple, np.ndarray] = None, name: str = "test", nx: int = 32,
                            dx: float = 1000./32, dt: float = 0.01):
     """
     Generates a video from a sequence of images, with a vector value on each point.
@@ -150,7 +152,7 @@ def generate_density_video(quiver_x: np.ndarray, quiver_y: np.ndarray, quiver_z:
         quiver_y (numpy.ndarray): A sequence of np.arrays containing the wave y vector coordinate at every timestep
         quiver_z (numpy.ndarray): A sequence of np.arrays containing the wave z vector coordinate at every timestep
         interrogators (List[Tuple]): A list containing the coordinates of each interrogator, as tuples
-        interrogators_data (Dict[Tuple, List]): Couples of interrogators coordinates associated with their measured data
+        interrogators_data (Dict[Tuple, numpy.ndarray]): Couples of interrogators coordinates associated with their measured data
         name (str): The name of the file to save the data to, without the `.mp4` extension
         nx (int): The width of the plane to display (it is assumed to be a squared plane)
         dx (float): The distance between each neighbour spatial point
@@ -160,7 +162,7 @@ def generate_density_video(quiver_x: np.ndarray, quiver_y: np.ndarray, quiver_z:
     interrogators_matrix = np.zeros(shape=lengths[0].shape)
     for i in interrogators:
         interrogators_matrix[i[0]+nx//2, i[1]+nx//2, i[2]+nx//2] = 1000.
-    clim = [-np.max(np.abs(lengths))*0.1, np.max(np.abs(lengths))*0.1]
+    clim = [-np.max(np.abs(lengths))*0.8, np.max(np.abs(lengths))*0.8]
     p = pv.Plotter(shape=(1, 2+len(interrogators)), notebook=False, off_screen=True, window_size=[(2+len(interrogators))*512, 512])
     grid = pv.ImageData(spacing=(dx, dx, dx), origin=(nx//2, nx//2, nx//2))
     grid.dimensions = np.array(lengths[0].shape) + 1

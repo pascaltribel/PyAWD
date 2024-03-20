@@ -64,10 +64,12 @@ def create_inverse_distance_matrix(nx: int, x0: int = 0, y0: int = 0, z0: int = 
     if dim == 2:
         x, y = np.meshgrid(x, y)
         distance = np.sqrt((x - (x0 + nx // 2)) ** 2 + (y - (y0 + nx // 2)) ** 2)
+        distance[x0+nx//2, y0+nx//2] = 1
     elif dim == 3:
         z = np.arange(nx)
         x, y, z = np.meshgrid(x, y, z)
         distance = np.sqrt((x - (x0 + nx // 2)) ** 2 + (y - (y0 + nx // 2)) ** 2 + (z - (z0 + nx // 2)) ** 2)
+        distance[x0+nx//2, y0+nx//2, z0+nx//2] = 1
     distance[distance > tau] = 0.
     distance[distance > 0] = 1 / distance[distance > 0]
     return distance
