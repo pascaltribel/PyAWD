@@ -1,16 +1,16 @@
 # pyawd - AcousticWaveDataset
 # Tribel Pascal - pascal.tribel@ulb.be
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict
 
 import numpy as np
 import devito as dvt
 
 import torch.utils.data
-import matplotlib.pyplot as plt
 import matplotlib.colors
 
 COLORS = matplotlib.colors.TABLEAU_COLORS
 dvt.configuration['log-level'] = "WARNING"
+
 
 class AcousticWaveDataset(torch.utils.data.Dataset):
     """
@@ -36,12 +36,8 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
     """The number of steps in the simulations, for which the whole simulation is accessible"""
     interrogators: List[Tuple]
     """A list containing the coordinates of each interrogator"""
-    interrogators_data: Dict[Tuple, List]
+    interrogators_data: Dict[Tuple, List[torch.Tensor]]
     """The measurements of each interrogator"""
-    grid: dvt.Grid
-    """The devito Grid on which the equation is solved"""
-    velocity_model: dvt.Function
-    """The propagation speed of the wave"""
     attenuation_factor: float
     """The attenuation factor in the acoustic wave equation"""
     max_velocities: np.ndarray
@@ -52,31 +48,46 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
     """The delay of apparition of the external force for each simulation"""
     amplitude_factor: np.ndarray
     """The amplitude factor to multiply the external force with"""
-    data: np.ndarray
+    data: torch.Tensor
     """The simulations data"""
-    keep_full_data: bool
-    """Whether keeping the full simulation or only the interrogable one"""
+    openmp: bool
+    """Use openmp optimization"""
 
-    def __init__(self, size: int, dx: float = 1000/128., nx: int = 128, sx: float = 1., dim: int = 2, ddt: float = 0.01,
-                 dt: float = 2, t: float = 10, interrogators: List[Tuple] = None, velocity_model: Union[
-                 str, float] = 300., attenuation_factor: float = 0.5, keep_full_data: bool = True):
+    def __init__(self, size: int, dx: float = 1000/128., nx: int = 128, sx: float = 1., ddt: float = 0.01,
+                 dt: float = 2, t: float = 10, interrogators: List[Tuple] = None, attenuation_factor: float = 0.5,
+                 openmp: bool = False):
         """
         Args:
             size (int): The number of samples to generate in the dataset
             dx (float): The discretisation rate of the array
             nx (int): The discretisation size of the array
-            dim (int): The number of dimensions of the simulations (2 or 3)
             sx (float): The sub-scaling factor of the array (0.5 means 1/2 values are returned)
             ddt (float): The time step used for the Operator solving iterations
             dt (float): The time step used for storing the wave propagation step (this should be higher than ddt)
             t (float): The simulations duration
-            velocity_model (str | float): either:
-                - A string identifier specifying a velocity framework
-                - A float, specifying a constant wave propagation speed
             attenuation_factor (float): The attenuation factor in the acoustic wave equation
-            keep_full_data (bool): Whether keeping the full simulation or only the interrogable one
+            openmp (bool): Use openmp optimization
         """
-        pass
+        try:
+            if dt < ddt:
+                raise ValueError('dt should be >= ddt')
+            self.size = size
+            self.dx = dx
+            self.nx = nx
+            self.sx = sx
+            self.ddt = ddt
+            self.dt = dt
+            self.nt = int(t / self.dt)
+            self.ndt = int(self.nt * (self.dt / self.ddt))
+            self.interrogators = interrogators
+            self.attenuation_factor = attenuation_factor
+            self.force_delay = np.random.random(size) * (t/2)
+            self.amplitude_factor = (0.5 * np.random.random(size) + 0.25) * 2
+            self.data = torch.Tensor([])
+            self.openmp = openmp
+
+        except ValueError as err:
+            print(err)
 
     def generate_data(self):
         """
@@ -91,20 +102,6 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             (numpy.ndarray): A numpy array containing the solutions for the `ndt` steps
         """
         pass
-
-    def interrogate(self, idx: int, point: Tuple) -> np.ndarray:
-        """
-        Args:
-            idx (int): The number of the sample to interrogate
-            point (Tuple): The interrogator position
-        Returns:
-            (numpy.ndarray): The amplitude measurements for the interrogator at coordinates `point` for the $idx^{th}$ sample
-        """
-        if point not in self.interrogators_data:
-            print("Error: the interrogated point is not interrogable.")
-            print("Available interrogable points:", list(self.interrogators_data.keys()))
-        else:
-            return self.interrogators_data[point][idx]
 
     def plot_item(self, idx: int):
         """
@@ -156,6 +153,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         """
         Returns:
             (Tuple): The epicenter, the simulation of the `idx`th sample, the maximal speed of propagation of the
-             propagation field, the delay before the external force application and the force amplitude factor
+             propagation field, the delay before the external force application, the force amplitude factor and
+             the interrogated data
         """
         pass

@@ -1,18 +1,17 @@
 # pyawd - AcousticWaveDataset
 # Tribel Pascal - pascal.tribel@ulb.be
-from memory_profiler import profile
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Union
 
 import numpy as np
 import devito as dvt
 import matplotlib.pyplot as plt
-import matplotlib.colors
 from matplotlib.colors import TABLEAU_COLORS
+import torch
 
 from tqdm.auto import tqdm
 from pyawd import VectorAcousticWaveDataset
-from pyawd.GenerateVideo import generate_quiver_video, generate_density_video
-from pyawd.utils import create_explosive_source, create_inverse_distance_matrix
+from pyawd.GenerateVideo import generate_quiver_video
+from pyawd.utils import create_explosive_source
 from pyawd.Marmousi import Marmousi
 
 COLORS = TABLEAU_COLORS
@@ -25,7 +24,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
     """
     def __init__(self, size: int, dx: float = 1000/32., nx: int = 32, sx: float = 1., ddt: float = 0.01,
                   dt: float = 2, t: float = 10, interrogators: List[Tuple] = None, velocity_model: Union[
-                  str, float] = 300., attenuation_factor: float = 0.5, keep_full_data: bool = True):
+                  str, float] = 300., attenuation_factor: float = 0.5, openmp: bool = False):
         """
         Args:
             size (int): The number of samples to generate in the dataset
@@ -39,12 +38,12 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                 - A string identifier specifying a velocity framework
                 - A float, specifying a constant wave propagation speed. Currently, only this type can be used with dim=3
             attenuation_factor (float): The attenuation factor in the acoustic wave equation
-            keep_full_data (bool): Whether keeping the full simulation or only the interrogable one
+            openmp (bool): Use openmp optimization
         """
         if interrogators is None:
             interrogators = [tuple(0 for _ in range(2))]
         super().__init__(size=size, dx=dx, nx=nx, sx=sx, ddt=ddt, dt=dt, t=t, interrogators=interrogators,
-                         velocity_model=velocity_model, attenuation_factor=attenuation_factor, keep_full_data=keep_full_data)
+                         attenuation_factor=attenuation_factor, openmp=openmp)
 
         self.grid = dvt.Grid(shape=tuple(self.nx for _ in range(2)), extent=tuple(self.dx*self.nx for _ in range(2)))
         self._u = dvt.VectorTimeFunction(name='u', grid=self.grid, space_order=2, save=self.ndt, time_order=2)
@@ -60,23 +59,6 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
             self.max_velocities = np.ones(size)
         self.epicenters = np.random.randint(-self.nx // 2, self.nx // 2, size=(self.size, 2)).reshape(
             (self.size, 2))
-        self.generate_data()
-
-    def generate_data(self):
-        """
-        Generates the dataset content by solving the Acoustic Wave PDE for each of the `epicenters`
-        """
-        self.data = []
-        self.interrogators_data = {interrogator: [] for interrogator in self.interrogators}
-        for idx in tqdm(range(self.size)):
-            data = self.solve_pde(idx)
-            if self.keep_full_data:
-                self.data.append(data[:, ::int(self.ndt / self.nt)])
-            for interrogator in self.interrogators:
-                self.interrogators_data[interrogator].append(data[:, :, interrogator[0] +
-                                                             (self.nx // 2), interrogator[1] +
-                                                             (self.nx // 2)])
-        self.data = np.array(self.data)
 
     def solve_pde(self, idx: int):
         """
@@ -94,7 +76,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                                  dvt.solve(dvt.Eq(self._u.dt2, self._f +
                                                   ((self.max_velocities[idx] * self.velocity_model) ** 2)
                                                   * self._u.laplace - self.attenuation_factor*self._u.dt),
-                                           self._u.forward)), opt=('advanced'))
+                                           self._u.forward)), opt=('advanced', {'openmp': self.openmp}))
         op.apply(dt=self.ddt)
         return np.array([self._u[i].data for i in range(self._u.shape[0])])
 
@@ -104,15 +86,12 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
         Args:
             idx (int): The number of the sample to plot
         """
-        if not self.keep_full_data:
-            print("Full data has not been stored.")
-            return
         colors = {}
         i = 0
         for interrogator in self.interrogators:
             colors[interrogator] = list(COLORS.values())[i]
             i += 1
-        epicenter, item, max_velocity, f_delay, amplitude_factor = self[idx]
+        epicenter, item, max_velocity, f_delay, amplitude_factor, _ = self[idx]
         fig = plt.figure(figsize=(self.nt * 5, 5))
         ax = []
         a, b = np.meshgrid(np.arange(self.nx), np.arange(self.nx))
@@ -122,11 +101,11 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                 ax[i].imshow(self.velocity_model.data[::int(1 / self.sx), ::int(1 / self.sx)],
                             vmin=np.min(self.velocity_model.data[::int(1 / self.sx), ::int(1 / self.sx)]),
                             vmax=np.max(self.velocity_model.data[::int(1 / self.sx), ::int(1 / self.sx)]), cmap="gray")
-                ax[i].quiver(a, b, item[0][i * (item.shape[1] // self.nt)], -item[1][i * (item.shape[1] // self.nt)],
+                ax[i].quiver(a, b, item[0, i * (item.shape[1] // self.nt)], -item[1, i * (item.shape[1] // self.nt)],
                             scale=0.25)
             else:
-                ax[i].quiver(a, b, item[0][i * (item.shape[1] // self.nt)],
-                             item[1][i * (item.shape[1] // self.nt)],
+                ax[i].quiver(a, b, item[0, i * (item.shape[1] // self.nt)],
+                             item[1, i * (item.shape[1] // self.nt)],
                              scale=0.25)
             for interrogator in self.interrogators:
                 ax[i].scatter(interrogator[0] + (self.nx // 2), interrogator[1] + (self.nx // 2), marker="1",
@@ -151,9 +130,10 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
             i += 1
         fig, ax = plt.subplots(ncols=len(self.interrogators), figsize=(len(self.interrogators) * 5, 5))
         y_lims = []
+        _, _, _, _, _, full_data = self[idx]
         for i in range(len(self.interrogators)):
-            data = self.interrogate(idx, self.interrogators[i])
-            y_lims += [np.min(data), np.max(data)]
+            data = full_data[self.interrogators[i]]
+            y_lims += [torch.min(data), torch.max(data)]
             for j in range(data.shape[0]):
                 if len(self.interrogators) == 1:
                     ax.plot(np.arange(0, self.ndt * self.ddt, self.ddt), data[j], linestyle=['-', '--'][j],
@@ -166,7 +146,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                 ax.set_title(str(self.interrogators[i]))
                 ax.set_xlabel("time (s)")
                 ax.set_ylabel("Amplitude")
-                ax.set_ylim([np.min(data), np.max(data)])
+                ax.set_ylim([torch.min(data), torch.max(data)])
             else:
                 ax[i].legend(["Abscissa", "Ordinate"])
                 ax[i].set_title(str(self.interrogators[i]))
@@ -179,6 +159,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                 self.force_delay[idx])[:4] + "\nAmplitude factor = " + str(self.amplitude_factor[idx])[:4] +
                          "\nEpicenter = " + str(self.epicenters[idx]))
             plt.tight_layout()
+        plt.show()
 
     def generate_video(self, idx: int, filename: str, nb_images: int):
         """
@@ -201,7 +182,12 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
         """
         Returns:
             (Tuple): The epicenter, the simulation of the `idx`th sample, the maximal speed of propagation of the
-             propagation field, the delay before the external force application and the force amplitude factor
+             propagation field, the delay before the external force application, the force amplitude factor and
+             the interrogated data
         """
-        return (self.epicenters[idx], self.data[idx][:, :, ::int(1 / self.sx), ::int(1 / self.sx)],
-                self.max_velocities[idx], self.force_delay[idx], self.amplitude_factor[idx])
+        data = self.solve_pde(idx)
+        return (self.epicenters[idx], torch.Tensor(data[:, ::int(self.ndt / self.nt),
+                                                  ::int(1 / self.sx), ::int(1 / self.sx)]), self.max_velocities[idx],
+                self.force_delay[idx], self.amplitude_factor[idx],
+                {i: torch.Tensor(data[:, :, i[0] + (self.nx // 2), i[1] + (self.nx // 2)])
+                 for i in self.interrogators})

@@ -114,25 +114,23 @@ def generate_quiver_video(quiver_x: np.ndarray, quiver_y: np.ndarray, interrogat
     nu_x = np.max(quiver_x)
     nu_y = np.max(quiver_y)
     for i in tqdm(range(len(quiver_x))):
-        fig = plt.figure(figsize=((len(interrogators)+1)*5, 5))
+        fig, axes = plt.subplots(ncols=len(interrogators)+1, figsize=((len(interrogators)+1)*5, 5))
         a, b = np.meshgrid(np.arange(nx), np.arange(nx))
-        ax = fig.subplot(1, 1, 1)
         if display_velocity_model:
-            ax.imshow(c.data[:], vmin=np.min(c.data[:]), vmax=np.max(c.data[:]), cmap="gray")
-            ax.quiver(a, b, quiver_x[i]/nu_x, -quiver_y[i]/nu_y)
+            axes[0].imshow(c.data[:], vmin=np.min(c.data[:]), vmax=np.max(c.data[:]), cmap="gray")
+            axes[0].quiver(a, b, quiver_x[i]/nu_x, -quiver_y[i]/nu_y)
         else:
-            ax.quiver(a, b, quiver_x[i] / nu_x, quiver_y[i] / nu_y)
+            axes[0].quiver(a, b, quiver_x[i] / nu_x, quiver_y[i] / nu_y)
         for interrogator in interrogators:
-            ax.scatter(interrogator[0] + (nx // 2), interrogator[1] + (nx // 2), marker="1",
-                       color=colors[interrogator])
-        ax.set_title("t = " + str(i * dt) + "s")
-        ax.axis("off")
-        axes = []
+            axes[0].scatter(interrogator[0] + (nx // 2), interrogator[1] + (nx // 2), marker="1",
+                            color=colors[interrogator])
+        axes[0].set_title("t = " + str(i * dt) + "s")
+        axes[0].axis("off")
         for inter in range(len(interrogators_data)):
-            key = interrogators_data.keys()[inter]
-            axes.append(fig.subplot(1, inter+1, inter+1))
+            key = list(interrogators_data.keys())[inter]
             for d in range(len(interrogators_data[key])):
-                axes[-1].plot(interrogators_data[key][d][:i], marker=['-', '--'][d])
+                axes[inter+1].plot(interrogators_data[key][d][:i], linestyle=['-', '--'][d])
+            axes[inter+1].set_ylim(-np.max(list(interrogators_data.values())), np.max(list(interrogators_data.values())),)
         fig.suptitle("t = " + str(dt * i)[:4] + "s, velocity factor = " + str(max_velocity)[:5])
         plt.tight_layout()
         plt.savefig(name + "%02d.png" % i, dpi=250)
