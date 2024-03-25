@@ -48,6 +48,7 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         np.save(filename+"_max_velocities.npy", self.max_velocities)
         np.save(filename+"_epicenters.npy", self.epicenters)
         np.save(filename+"_interrogators.npy", self.interrogators)
+        np.save(filename+"_velocity_model.npy", self.velocity_model.data[:])
 
     @classmethod
     def load(cls, filename: str):
@@ -67,6 +68,7 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         dataset.max_velocities = np.load(filename+"_max_velocities.npy")
         dataset.epicenters = np.load(filename+"_epicenters.npy")
         dataset.interrogators = [tuple(i) for i in np.load(filename+"_interrogators.npy")]
+        dataset.velocity_model.data[:] = np.load(filename+"_velocity_model.npy")
         return dataset
 
     def generate_data(self):
