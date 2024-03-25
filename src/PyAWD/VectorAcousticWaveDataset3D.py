@@ -93,7 +93,11 @@ class VectorAcousticWaveDataset3D(VectorAcousticWaveDataset):
         for interrogator in self.interrogators:
             colors[interrogator] = list(COLORS.values())[i]
             i += 1
-        epicenter, item, max_velocity, f_delay, amplitude_factor, _ = self[idx]
+        item, _ = self[idx]
+        epicenter = self.epicenters[idx]
+        max_velocity = self.max_velocities[idx]
+        f_delay = self.force_delay[idx]
+        amplitude_factor = self.amplitude_factor[idx]
         fig = plt.figure(figsize=(self.nt * 5, 5))
         ax = []
         a, b, c = np.meshgrid(np.arange(self.nx), np.arange(self.nx), np.arange(self.nx))
@@ -107,7 +111,7 @@ class VectorAcousticWaveDataset3D(VectorAcousticWaveDataset):
                               color=colors[interrogator])
             ax[i].set_title("t = " + str(i * (item.shape[1] // self.nt) * self.dt) + "s, \nVelocity factor = " +
                             str(max_velocity)[:5] + ", \nForce delay = " + str(f_delay)[:4] +
-                            ", \nAmplitude factor = " + str(amplitude_factor)[:4])
+                            ", \nAmplitude factor = " + str(amplitude_factor)[:4] + "\nEpicenter = " + str(epicenter))
             ax[i].tick_params(labelbottom=False, labeltop=False, labelleft=False, labelright=False)
         plt.tight_layout()
         plt.show()
@@ -125,7 +129,7 @@ class VectorAcousticWaveDataset3D(VectorAcousticWaveDataset):
             i += 1
         fig, ax = plt.subplots(ncols=len(self.interrogators), figsize=(len(self.interrogators) * 5, 5))
         y_lims = []
-        _, _, _, _, _, full_data = self[idx]
+        _, full_data = self[idx]
         for i in range(len(self.interrogators)):
             data = full_data[self.interrogators[i]]
             y_lims += [np.min(data), np.max(data)]
@@ -182,8 +186,7 @@ class VectorAcousticWaveDataset3D(VectorAcousticWaveDataset):
              the interrogated data
         """
         data = self.solve_pde(idx)
-        return (self.epicenters[idx], torch.Tensor(data[:, :int(self.ndt / self.nt),
-                                                    ::int(1 / self.sx), ::int(1 / self.sx), ::int(1 / self.sx)]),
-                self.max_velocities[idx], self.force_delay[idx], self.amplitude_factor[idx],
+        return (torch.Tensor(data[:, :int(self.ndt / self.nt),
+                             ::int(1 / self.sx), ::int(1 / self.sx), ::int(1 / self.sx)]),
                 {i: data[:, :, i[0] + (self.nx // 2), i[1] + (self.nx // 2), i[2] + (self.nx // 2)]
                  for i in self.interrogators})

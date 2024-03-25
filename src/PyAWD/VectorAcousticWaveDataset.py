@@ -129,6 +129,30 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         """
         return self.size
 
+    def get_epicenter(self, idx):
+        """
+        Returns the epicenter of the $idx^{th}$ sample
+        """
+        return self.epicenters[idx]
+
+    def get_max_velocity(self, idx):
+        """
+        Returns the maximal velocity of the $idx^{th}$ sample
+        """
+        return self.max_velocities[idx]
+
+    def get_force_delay(self, idx):
+        """
+        Returns the delay before the external force occurring in the $idx^{th}$ sample
+        """
+        return self.force_delay[idx]
+
+    def get_amplitude_factor(self, idx):
+        """
+        Returns the amplitude factor of the external force in the $idx^{th}$ sample
+        """
+        return self.amplitude_factor[idx]
+
     def __getitem__(self, idx):
         """
         Returns:
