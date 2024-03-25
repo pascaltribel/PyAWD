@@ -133,7 +133,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
         _, _, _, _, _, full_data = self[idx]
         for i in range(len(self.interrogators)):
             data = full_data[self.interrogators[i]]
-            y_lims += [torch.min(data), torch.max(data)]
+            y_lims += [np.min(data), np.max(data)]
             for j in range(data.shape[0]):
                 if len(self.interrogators) == 1:
                     ax.plot(np.arange(0, self.ndt * self.ddt, self.ddt), data[j], linestyle=['-', '--'][j],
@@ -146,7 +146,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                 ax.set_title(str(self.interrogators[i]))
                 ax.set_xlabel("time (s)")
                 ax.set_ylabel("Amplitude")
-                ax.set_ylim([torch.min(data), torch.max(data)])
+                ax.set_ylim([np.min(data), np.max(data)])
             else:
                 ax[i].legend(["Abscissa", "Ordinate"])
                 ax[i].set_title(str(self.interrogators[i]))
@@ -158,7 +158,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
             fig.suptitle("Velocity factor = " + str(self.max_velocities[idx])[:5] + "\nForce delay = " + str(
                 self.force_delay[idx])[:4] + "\nAmplitude factor = " + str(self.amplitude_factor[idx])[:4] +
                          "\nEpicenter = " + str(self.epicenters[idx]))
-            plt.tight_layout()
+        plt.tight_layout()
         plt.show()
 
     def generate_video(self, idx: int, filename: str, nb_images: int):
@@ -189,5 +189,5 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
         return (self.epicenters[idx], torch.Tensor(data[:, ::int(self.ndt / self.nt),
                                                   ::int(1 / self.sx), ::int(1 / self.sx)]), self.max_velocities[idx],
                 self.force_delay[idx], self.amplitude_factor[idx],
-                {i: torch.Tensor(data[:, :, i[0] + (self.nx // 2), i[1] + (self.nx // 2)])
+                {i: data[:, :, i[0] + (self.nx // 2), i[1] + (self.nx // 2)]
                  for i in self.interrogators})

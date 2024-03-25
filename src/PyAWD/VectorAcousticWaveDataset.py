@@ -34,6 +34,41 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         """
         super().__init__(size, dx, nx, sx, ddt, dt, t, interrogators, attenuation_factor, openmp=openmp)
 
+    def save(self, filename: str):
+        """
+        Saves the dataset features to different files, starting with `filename`.
+        This is intended to allow to retrieve the dataset by using "VectorAcousticWaveDataset2D().load(filename)`
+        Args:
+            filename (str): The base name of the files where the data will be saved
+        """
+        features = np.array([self.size, self.dx, self.nx, self.sx, self.ddt, self.dt, self.nt, self.ndt, self.attenuation_factor])
+        np.save(filename+"_features.npy", features)
+        np.save(filename+"_force_delays.npy", self.force_delay)
+        np.save(filename+"_amplitude_factors.npy", self.amplitude_factor)
+        np.save(filename+"_max_velocities.npy", self.max_velocities)
+        np.save(filename+"_epicenters.npy", self.epicenters)
+        np.save(filename+"_interrogators.npy", self.interrogators)
+
+    @classmethod
+    def load(cls, filename: str):
+        """
+        Loads a dataset that was saved through the `save()` method.
+        Args:
+            filename (str): The base name of the files where the data has been saved
+        """
+        features = np.load(filename+"_features.npy")
+        dataset = cls(size=int(features[0]), dx=features[1], nx=int(features[2]), sx=features[3],
+                      ddt=features[4], dt=features[5])
+        dataset.nt = int(features[6])
+        dataset.ndt = int(features[7])
+        dataset.attenuation_factor = features[8]
+        dataset.force_delay = np.load(filename+"_force_delays.npy")
+        dataset.amplitude_factor = np.load(filename+"_amplitude_factors.npy")
+        dataset.max_velocities = np.load(filename+"_max_velocities.npy")
+        dataset.epicenters = np.load(filename+"_epicenters.npy")
+        dataset.interrogators = [tuple(i) for i in np.load(filename+"_interrogators.npy")]
+        return dataset
+
     def generate_data(self):
         """
         Generates the dataset content by solving the Acoustic Wave PDE for each of the `epicenters`
