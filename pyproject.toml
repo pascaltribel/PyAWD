@@ -9,7 +9,7 @@ exclude = ["upload_on_pip", "reinstall"]
 
 [project]
 name = "pyawd"
-version = "0.3.49"
+version = "0.3.51"
 authors = [{name="Tribel Pascal", email="pascal.tribel@ulb.be" }]
 description = "A Pytorch dataset for Acoustic Wave Propagation"
 readme = "README.md"
@@ -20,7 +20,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ["devito", "torch", "matplotlib", "tqdm", "numpy", "sympy", "opencv-python", "pyvista", "trame", "vtk",
-    "imageio", "imageio-ffmpeg", "npy-append-array", "mpi4py"]
+    "imageio", "imageio-ffmpeg", "npy-append-array", "mpi4py", "opencv-python"]
 
 [project.urls]
 Homepage = "https://github.com/pascaltribel/PyAWD"
