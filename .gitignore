@@ -7,4 +7,4 @@ dist/
 venv/
 generate_docs
 .idea/
-*.npy
+**/*.npy
