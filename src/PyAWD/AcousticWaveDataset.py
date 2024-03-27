@@ -93,7 +93,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         """
         Generates the dataset content by solving the Acoustic Wave PDE for each of the `epicenters`
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def solve_pde(self, idx: int):
         """
@@ -101,7 +101,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         Returns:
             (numpy.ndarray): A numpy array containing the solutions for the `ndt` steps
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def plot_item(self, idx: int):
         """
@@ -109,7 +109,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         Args:
             idx (int): The number of the sample to plot
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def plot_interrogators_response(self, idx: int):
         """
@@ -117,7 +117,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
         Args:
             idx (int): The number of the sample to plot
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def generate_video(self, idx: int, filename: str, nb_images: int):
         """
@@ -129,7 +129,7 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
             nb_images (int): the number of frames used to generate the video. This should be an entire divider of the number
                          of points computed when applying the solving operator
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def set_scaling_factor(self, sx: float):
         """
@@ -156,4 +156,4 @@ class AcousticWaveDataset(torch.utils.data.Dataset):
              propagation field, the delay before the external force application, the force amplitude factor and
              the interrogated data
         """
-        pass
+        raise NotImplementedError('This class is abstract')

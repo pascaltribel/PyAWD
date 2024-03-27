@@ -58,13 +58,13 @@ dataset.interrogate((0, 0))
 ```
 
 ## More advanced usage
-Using the `VectorAcousticWaveDataset` class, you can produce simulations in 2D which are more realistic:
+Using the `VectorAcousticWaveDataset` classes, you can produce simulations which are more realistic:
 
 ```python
-dataset = VectorAcousticWaveDataset(2, nx=250, dt=2, interrogators=[(-10, 0), (10, 0)], t=10)
+dataset = VectorAcousticWaveDataset2D(2, nx=250, dt=2, interrogators=[(-10, 0), (10, 0)], t=10)
 ```
 
-Especially, the `interrogate` method provides measurements along two orthogonal dimensions:
+Especially, this provides measurements along orthogonal dimensions:
 
 ```python
 dataset.plot_item(0)
@@ -73,7 +73,7 @@ dataset.plot_interrogators_response(0)
 
 
 ## Examples
-Mutliple IPython notebooks are presented in the [examples](examples/) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
+Multiple IPython notebooks are presented in the [examples](examples/) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
 
 ```bash
 jupyter-notebook
@@ -94,4 +94,7 @@ from pyawd.AcousticWaveDataset import AcousticWaveDataset
 from pyawd.VectorAcousticWaveDataset import VectorAcousticWaveDataset
 from pyawd.VectorAcousticWaveDataset2D import VectorAcousticWaveDataset2D
 from pyawd.VectorAcousticWaveDataset3D import VectorAcousticWaveDataset3D
+from pyawd.VelocityModel import VelocityModel
+from pyawd.VelocityModel2D import VelocityModel2D
+from pyawd.VelocityModel3D import VelocityModel3D
 from pyawd.Marmousi import Marmousi

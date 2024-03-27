@@ -75,7 +75,7 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         """
         Generates the dataset content by solving the Acoustic Wave PDE for each of the `epicenters`
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def solve_pde(self, idx: int):
         """
@@ -83,7 +83,7 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         Returns:
             (numpy.ndarray): A numpy array containing the solutions for the `ndt` steps
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def plot_item(self, idx: int):
         """
@@ -91,7 +91,7 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         Args:
             idx (int): The number of the sample to plot
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def plot_interrogators_response(self, idx: int):
         """
@@ -99,7 +99,7 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
         Args:
             idx (int): The number of the sample to plot
         """
-        pass
+        raise NotImplementedError('This class is abstract')
 
     def generate_video(self, idx: int, filename: str, nb_images: int):
         """
@@ -111,25 +111,7 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
             nb_images (int): the number of frames used to generate the video. This should be an entire divider of the number
                          of points computed when applying the solving operator
         """
-        pass
-
-    def set_scaling_factor(self, sx: float):
-        """
-        Fixes a new scaling factor (0.5 means $\\frac{1}{2}$ values are returned). It should be <= 1.
-        Args:
-            sx (float): the new scaling factor
-        """
-        if sx <= 1.:
-            self.sx = sx
-        else:
-            print("The scaling factor should be lower or equal to 1.")
-
-    def __len__(self):
-        """
-        Returns:
-            (int): The number of simulations in the dataset
-        """
-        return self.size
+        raise NotImplementedError('This class is abstract')
 
     def get_epicenter(self, idx):
         """
@@ -162,4 +144,4 @@ class VectorAcousticWaveDataset(AcousticWaveDataset):
              propagation field, the delay before the external force application, the force amplitude factor and
              the interrogated data
         """
-        pass
+        raise NotImplementedError('This class is abstract')
