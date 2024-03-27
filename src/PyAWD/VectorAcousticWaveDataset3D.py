@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import TABLEAU_COLORS
 import torch
 
-from pyawd import VectorAcousticWaveDataset
+from pyawd import VectorAcousticWaveDataset, VelocityModel3D
 from pyawd.GenerateVideo import generate_density_video
 from pyawd.utils import create_explosive_source
 
@@ -47,15 +47,17 @@ class VectorAcousticWaveDataset3D(VectorAcousticWaveDataset):
         self.grid = dvt.Grid(shape=tuple(self.nx for _ in range(3)), extent=tuple(self.dx*self.nx for _ in range(3)))
         self._u = dvt.VectorTimeFunction(name='u', grid=self.grid, space_order=2, save=self.ndt, time_order=2)
         self._f = dvt.VectorTimeFunction(name='f', grid=self.grid, space_order=1, save=self.ndt, time_order=1)
+        self._velocity_model = VelocityModel3D(self.nx)
         self.velocity_model = dvt.Function(name='c', grid=self.grid)
         if velocity_model == "Marmousi":
-            print("Marmousi model is only available in 2D")
+            raise NotImplementedError("Marmousi model is only available in 2D")
+        self._velocity_model.set_value(velocity_model)
         self._display_velocity_model = False
-        self.velocity_model.data[:] = velocity_model
+        self.velocity_model.data[:] = self._velocity_model.get_data()
         self.max_velocities = np.ones(size)
         self.epicenters = np.random.randint(-self.nx // 2, self.nx // 2, size=(self.size, 3)).reshape((self.size, 3))
 
-    def solve_pde(self, idx: int):
+    def solve_pde(self, idx: int) -> np.ndarray:
         """
         Solves the Acoustic Wave Equation for the idx parameters.
         Returns:
@@ -178,7 +180,7 @@ class VectorAcousticWaveDataset3D(VectorAcousticWaveDataset):
                                 for i in self.interrogators},
                                filename, nx=self.nx, dt=self.ddt * (self.ndt // nb_images), dx=self.dx)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx) -> Tuple:
         """
         Returns:
             (Tuple): The epicenter, the simulation of the `idx`th sample, the maximal speed of propagation of the

@@ -89,12 +89,12 @@ jupyter-notebook
 ## Related Works:
 - https://essd.copernicus.org/preprints/essd-2023-470/
 """
-from pyawd.ScalarAcousticWaveDataset import ScalarAcousticWaveDataset
-from pyawd.AcousticWaveDataset import AcousticWaveDataset
-from pyawd.VectorAcousticWaveDataset import VectorAcousticWaveDataset
-from pyawd.VectorAcousticWaveDataset2D import VectorAcousticWaveDataset2D
-from pyawd.VectorAcousticWaveDataset3D import VectorAcousticWaveDataset3D
 from pyawd.VelocityModel import VelocityModel
 from pyawd.VelocityModel2D import VelocityModel2D
 from pyawd.VelocityModel3D import VelocityModel3D
 from pyawd.Marmousi import Marmousi
+#from pyawd.ScalarAcousticWaveDataset import ScalarAcousticWaveDataset
+from pyawd.AcousticWaveDataset import AcousticWaveDataset
+from pyawd.VectorAcousticWaveDataset import VectorAcousticWaveDataset
+from pyawd.VectorAcousticWaveDataset2D import VectorAcousticWaveDataset2D
+from pyawd.VectorAcousticWaveDataset3D import VectorAcousticWaveDataset3D

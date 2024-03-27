@@ -33,6 +33,14 @@ class VelocityModel:
         """
         return self.data
 
+    def set_value(self, value: float):
+        """
+        Initialize the data array with the specified value
+        Args:
+            - value (float): the value to initialize the array with
+        """
+        self.data[:] = value
+
     def plot(self):
         """
         Plots the field

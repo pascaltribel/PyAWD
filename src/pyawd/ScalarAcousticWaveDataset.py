@@ -4,14 +4,13 @@ from typing import Tuple, List, Dict
 
 import numpy as np
 import devito as dvt
-import matplotlib.colors
 from matplotlib.colors import TABLEAU_COLORS
 import torch.utils.data
 from tqdm.auto import tqdm
 
 from pyawd.GenerateVideo import generate_video
 from pyawd.utils import *
-from pyawd.Marmousi import *
+from pyawd import Marmousi
 
 COLORS = TABLEAU_COLORS
 

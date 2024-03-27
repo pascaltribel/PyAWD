@@ -9,7 +9,7 @@ from matplotlib.colors import TABLEAU_COLORS
 import torch
 
 from tqdm.auto import tqdm
-from pyawd import VectorAcousticWaveDataset
+from pyawd import VectorAcousticWaveDataset, VelocityModel2D
 from pyawd.GenerateVideo import generate_quiver_video
 from pyawd.utils import create_explosive_source
 from pyawd.Marmousi import Marmousi
@@ -50,17 +50,20 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
         self._f = dvt.VectorTimeFunction(name='f', grid=self.grid, space_order=1, save=self.ndt, time_order=1)
         self.velocity_model = dvt.Function(name='c', grid=self.grid)
         if velocity_model == "Marmousi":
+            self._velocity_model = Marmousi(self.nx)
             self._display_velocity_model = True
-            self.velocity_model.data[:] = Marmousi(self.nx).get_data() * 10
+            self.velocity_model.data[:] = self._velocity_model.get_data() * 10
             self.max_velocities = (np.random.random(size) * 0.5 + 0.5) * 400
         elif isinstance(velocity_model, float) or isinstance(velocity_model, int):
+            self._velocity_model = VelocityModel2D(self.nx)
+            self._velocity_model.set_value(velocity_model)
             self._display_velocity_model = False
-            self.velocity_model.data[:] = velocity_model
+            self.velocity_model.data[:] = self._velocity_model.get_data()
             self.max_velocities = np.ones(size)
         self.epicenters = np.random.randint(-self.nx // 2, self.nx // 2, size=(self.size, 2)).reshape(
             (self.size, 2))
 
-    def solve_pde(self, idx: int):
+    def solve_pde(self, idx: int) -> np.ndarray:
         """
         Solves the Acoustic Wave Equation for the idx parameters.
         Returns:
@@ -182,7 +185,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                               max_velocity=self.max_velocities[idx], display_velocity_model=self._display_velocity_model,
                               verbose=True)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx) -> Tuple:
         """
         Returns:
             (Tuple): The epicenter, the simulation of the `idx`th sample, the maximal speed of propagation of the
