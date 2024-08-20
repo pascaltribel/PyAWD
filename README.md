@@ -69,12 +69,3 @@ Especially, the `interrogate` method provides measurements along two orthogonal 
 dataset.plot_item(0)
 dataset.plot_interrogators_response(0)
 ```
-
-
-## Marmousi velocity field
-The Marmousi velocity field used in the simulation is a subset of the following:
-
-<img src="https://slideplayer.com/slide/15021598/91/images/37/Marmousi+Velocity+Model.jpg" alt="Marmousi velocity field" width="40%"/>
-
-## Related Works:
-- https://essd.copernicus.org/preprints/essd-2023-470/
