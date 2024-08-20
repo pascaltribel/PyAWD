@@ -22,8 +22,8 @@ class Marmousi(VelocityModel2D):
         Args:
             nx (int): The width of the field, in pixels
         """
-        super().__init__(min(nx, self.raw_nx))
         self.raw_data = _get_marmousi_data()
         self.raw_nx = self.raw_data.shape[0]
+        super().__init__(min(nx, self.raw_nx))
         self.data = cv2.resize(self.raw_data, (nx, nx))
         self.data = self.data / (np.max(self.data) * 10)
