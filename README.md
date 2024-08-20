@@ -31,8 +31,7 @@ We provide a bunch of Notebooks to start using the tool. They are presented in t
 
 Basic imports:
 ```python
-import pyawd
-from pyawd import ScalarAcousticWaveDataset
+from pyawd import *
 ```
 
 Let us generate a Dataset made of 10 simulations. Each simulation is run in a $250\times 250$ matrix. We store the field state every $2$ seconds and we run the simulation for $10$ seconds:
