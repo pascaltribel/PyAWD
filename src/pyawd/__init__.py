@@ -5,9 +5,9 @@ r"""
 Pyawd (standing for Pytorch Acoustic Wave Dataset) is a powerful tool for building datasets containing custom simulations of the propagation of Acoustic Wave through a given medium.
 It uses the finite differences scheme (implemented in the Devito package) to solve the Acoustic Wave Equation, and offers convenient tools for the customisation of the parameters, the handling of the data, the visualisation of the simulations.
 
-Here is an example of the kind of visualisation PyAWD offers:
+Here is an example of the kind of visualisation PyAWD offers. The two first pannels show the propagation in 3 dimensions, and the three last ones show the measured movement at the three interrogators, placed at the cube top surface.
 
-<video src="https://github.com/pascaltribel/pyawd/raw/main/examples/test3.mp4" width="320" height="240" controls></video>
+<video src="https://github.com/pascaltribel/pyawd/raw/main/examples/test3.mp4" width="1000" controls></video>
 
 
 ## Acoustic Wave Equation
