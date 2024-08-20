@@ -80,11 +80,13 @@ dataset.plot_interrogators_response(0)
 
 
 ## Examples
-Multiple IPython notebooks are presented in the [examples]https://github.com/pascaltribel/pyawd/tree/main/examples) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
+Multiple IPython notebooks are presented in the [examples](https://github.com/pascaltribel/pyawd/tree/main/examples) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
 
 ```bash
 jupyter-notebook
 ```
+
+However, those are provided in HTML for your convenience. Just click on their name in the following list:
 
 - [`ScalarAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/ScalarAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation
 - [`VectorAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the vector acoustic wave propagation
