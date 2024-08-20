@@ -5,6 +5,7 @@ from typing import Tuple, List, Dict
 import numpy as np
 import devito as dvt
 from matplotlib.colors import TABLEAU_COLORS
+import matplotlib.pyplot as plt
 import torch.utils.data
 from tqdm.auto import tqdm
 
