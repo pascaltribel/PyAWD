@@ -7,7 +7,7 @@ It uses the finite differences scheme (implemented in the Devito package) to sol
 
 Here is an example of the kind of visualisation PyAWD offers:
 
-<video src="https://github.com/pascaltribel/pyawd/blob/main/examples/test3.mp4" width="320" height="240" controls></video>
+<video src="https://github.com/pascaltribel/pyawd/raw/main/examples/test3.mp4" width="320" height="240" controls></video>
 
 
 ## Acoustic Wave Equation
