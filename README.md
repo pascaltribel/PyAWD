@@ -48,7 +48,7 @@ dataset.plot_item(0)
 ```
 
 Which outputs the following figure:
-![Example of simulation output](https://github.com/pascaltribel/pyawd/tree/main/examples/example.png)
+<img src="https://github.com/pascaltribel/pyawd/tree/main/examples/example.png" alt="Example" width="40%"/>
 
 Finally, we can generate a video of this simulation. We will use $200$ frames, which yields a final rate of $20 fps$:
 
@@ -58,6 +58,7 @@ dataset.generate_video(0, "example", 200)
 
 This produces the following video (stored in the file `example.mp4`):
 
+<video src="https://github.com/pascaltribel/pyawd/tree/main/examples/example.mp4" alt="Example" width="40%" controls/>
 ![Example of simulation output](https://github.com/pascaltribel/pyawd/tree/main/examples/dataset_generation.gif)
 
 
