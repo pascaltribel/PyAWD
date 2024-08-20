@@ -2,11 +2,11 @@
 A package for generating a Pytorch dataset containing simulations of the acoustic wave propagation in the Marmousi velocity field. It uses the [Devito Python Library](https://www.devitoproject.org) to solve the acoustic wave PDE from various random initial conditions.
 
 ## Acoustic Wave Equation
-The equation of propagation of an acoustic wave is given by $\frac{d^2u}{dt^2} = c \nabla^2 u + f(x, y)$, where
-- $u(x, y)$ is the displacement field, and can be either a scalar or a vector field
-- $c(x, y)$ is the wave  propagation speed
+The equation of propagation of an acoustic wave is given by $\frac{d^2u}{dt^2} = c \nabla^2 u + f$, where
+- $u(x, y, t)$ is the displacement field and can be either a scalar or a vector field
+- $c(x, y, t)$ is the wave  propagation speed
 - $\nabla^2$ is the _laplacian operator_
-- $f(x, y)$ is an external force applied on the system, for which the value can vary through time
+- $f(x, y, t)$ is an external force applied on the system, for which the value can vary through time
 
 ## Installation
 The package (along with the dependencies) is accessible via [PyPI](https://pypi.org/project/PyAWD/):
@@ -17,7 +17,15 @@ pip install pyawd
 
 ## Documentation
 The API documentation is available [here](https://pascaltribel.github.io/pyawd/).
-Basic help is provided for each class and function, and is accessible via the Python `help()` function.
+Basic help is provided for each class and function and is accessible via the Python `help()` function.
+We provide a bunch of Notebooks to start using the tool. Those are readable online:
+- [`ScalarAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/ScalarAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation
+- [`VectorAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the vector acoustic wave propagation
+- [`VectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWaveDataset.html): an introduction to the VectorAcousticWaveDataset possibilities
+- [`Marmousi.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/Marmousi.html): a visualisation of the Marmousi velocity field used in the simulations
+- [`Interrogators.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/Interrogators.html): an introduction to the PyAWD Interrogators usage
+- [`GenerateVectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/GenerateVectorAcousticWaveDataset.html): how to generate dataset using `pyawd`
+- [`SpatioTemporalVaryingWavePropagationSpeedField.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/SpatioTemporalVaryingWavePropagationSpeedField.html): how to create a spatio-temporal varying propagation field
 
 ## Getting started
 
