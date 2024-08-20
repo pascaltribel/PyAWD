@@ -48,7 +48,8 @@ dataset.plot_item(0)
 ```
 
 Which outputs the following figure:
-<img src="https://github.com/pascaltribel/pyawd/blob/8cc0547545559c3a02199e86d2cf504edf805a48/examples/example.png" alt="Example" width="40%"/>
+
+<img src="https://github.com/pascaltribel/pyawd/blob/8cc0547545559c3a02199e86d2cf504edf805a48/examples/example.png" alt="Example" width="60%"/>
 
 Finally, we can generate a video of this simulation. We will use $200$ frames, which yields a final rate of $20 fps$:
 
@@ -58,8 +59,7 @@ dataset.generate_video(0, "example", 200)
 
 This produces the following video (stored in the file `example.mp4`):
 
-<video src="https://github.com/pascaltribel/pyawd/tree/main/examples/example.mp4" alt="Example" width="40%" controls/>
-![Example of simulation output](https://github.com/pascaltribel/pyawd/tree/main/examples/dataset_generation.gif)
+<video src="https://github.com/pascaltribel/pyawd/raw/main/examples/example.mp4" alt="Example" width="40%" controls/>
 
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
