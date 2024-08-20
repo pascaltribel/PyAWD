@@ -48,7 +48,7 @@ dataset.plot_item(0)
 ```
 
 Which outputs the following figure:
-![Example of simulation output](examples/example.png)
+![Example of simulation output](https://github.com/pascaltribel/pyawd/tree/main/examples/example.png)
 
 Finally, we can generate a video of this simulation. We will use $200$ frames, which yields a final rate of $20 fps$:
 
@@ -58,7 +58,7 @@ dataset.generate_video(0, "example", 200)
 
 This produces the following video (stored in the file `example.mp4`):
 
-![Example of simulation output](examples/dataset_generation.gif)
+![Example of simulation output](https://github.com/pascaltribel/pyawd/tree/main/examples/dataset_generation.gif)
 
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
@@ -83,7 +83,7 @@ dataset.plot_interrogators_response(0)
 
 
 ## Examples
-Mutliple IPython notebooks are presented in the [examples](examples/) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
+Mutliple IPython notebooks are presented in the [[examples](https://github.com/pascaltribel/pyawd/tree/main/examples) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
 
 ```bash
 jupyter-notebook
