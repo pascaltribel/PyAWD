@@ -48,7 +48,7 @@ dataset.plot_item(0)
 ```
 
 Which outputs the following figure:
-<img src="https://github.com/pascaltribel/pyawd/tree/main/examples/example.png" alt="Example" width="40%"/>
+<img src="https://github.com/pascaltribel/pyawd/blob/8cc0547545559c3a02199e86d2cf504edf805a48/examples/example.png" alt="Example" width="40%"/>
 
 Finally, we can generate a video of this simulation. We will use $200$ frames, which yields a final rate of $20 fps$:
 
