@@ -1,16 +1,18 @@
 # pyawd
 # Tribel Pascal - pascal.tribel@ulb.be
 r"""
-# pyawd
+# pyawd - A PyTorch Acoustic Wave Dataset Generator
 Pyawd (standing for Pytorch Acoustic Wave Dataset) is a powerful tool for building datasets containing custom simulations of the propagation of Acoustic Wave through a given medium.
 It uses the finite differences scheme (implemented in the Devito package) to solve the Acoustic Wave Equation, and offers convenient tools for the customisation of the parameters, the handling of the data, the visualisation of the simulations.
 
 ## Acoustic Wave Equation
-The equation of propagation of an acoustic wave is given by $\frac{d^2u}{dt^2} = c \nabla^2 u + f(x, y)$, where
-- $u(x, y)$ is the displacement field, and can be either a scalar or a vector field
-- $c(x, y)$ is the wave  propagation speed
+The equation of propagation of an acoustic wave is given by 
+$$\frac{d^2u}{dt^2} = c \nabla^2 u + f(x, y, t)$$ 
+where
+- $u(x, y, t)$ is the displacement field, and can be either a scalar or a vector field
+- $c(x, y, t)$ is the wave  propagation speed
 - $\nabla^2$ is the _laplacian operator_
-- $f(x, y)$ is an external force applied on the system, for which the value can vary through time
+- $f(x, y, t)$ is an external force applied on the system, for which the value can vary through time
 
 
 ## Installation
@@ -73,7 +75,7 @@ dataset.plot_interrogators_response(0)
 
 
 ## Examples
-Multiple IPython notebooks are presented in the [examples](examples/) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
+Multiple IPython notebooks are presented in the [examples](https://github.com/pascaltribel/pyawd/examples/) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:
 
 ```bash
 jupyter-notebook
@@ -85,6 +87,7 @@ jupyter-notebook
 - `Marmousi.ipynb`: a visualisation of the Marmousi velocity field used in the simulations
 - `Interrogators.ipynb`: an introduction to the PyAWD Interrogators usage
 - `GenerateVectorAcousticWaveDataset.ipynb`: how to generate dataset using `pyawd`
+- `SpatioTemporalVaryingWavePropagationSpeedField.ipynb`: how to create a spatio-temporal varying propagation field
 
 ## Related Works:
 - https://essd.copernicus.org/preprints/essd-2023-470/
