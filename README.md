@@ -1,4 +1,4 @@
-<img src="https://github.com/pascaltribel/pyawd/blob/e252039263c7f2509ec128179f4e08caefaa27c2/Logo.png" alt="Logo" width="60%"/>
+<img src="https://github.com/pascaltribel/pyawd/blob/aca41d51f3a8aaf0028fdfc1b0637e0e545da432/Logo.png" alt="Logo" width="60%"/>
 # PyAWD: a Python acoustic wave propagation dataset using PyTorch and Devito
 A package for generating Pytorch datasets containing simulations of the acoustic wave propagation in custom velocity fields. 
 
