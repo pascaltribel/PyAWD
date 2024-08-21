@@ -1,7 +1,7 @@
 # pyawd
 # Tribel Pascal - pascal.tribel@ulb.be
 r"""
-<img src="https://github.com/pascaltribel/pyawd/blob/aca41d51f3a8aaf0028fdfc1b0637e0e545da432/Logo.png" alt="Logo" width="60%"/>
+<img src="https://github.com/pascaltribel/pyawd/blob/main/Logo.png?raw=true" alt="Logo" width="60%"/>
 
 # pyawd - A PyTorch Acoustic Wave Dataset Generator
 Pyawd (standing for Pytorch Acoustic Wave Dataset) is a powerful tool for building datasets containing custom simulations of the propagation of Acoustic Wave through a given medium.
