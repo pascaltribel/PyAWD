@@ -1,7 +1,7 @@
 # pyawd
 # Tribel Pascal - pascal.tribel@ulb.be
 r"""
-<img src="https://github.com/pascaltribel/pyawd/blob/main/Logo.png?raw=true" alt="Logo" width="60%"/>
+<img src="https://github.com/pascaltribel/pyawd/raw/main/Logo.png?raw=true" alt="Logo" width="60%"/>
 
 # pyawd - A PyTorch Acoustic Wave Dataset Generator
 Pyawd (standing for Pytorch Acoustic Wave Dataset) is a powerful tool for building datasets containing custom simulations of the propagation of Acoustic Wave through a given medium.
@@ -97,9 +97,6 @@ However, those are provided in HTML for your convenience. Just click on their na
 - [`Interrogators.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/Interrogators.html): an introduction to the PyAWD Interrogators usage
 - [`GenerateVectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/GenerateVectorAcousticWaveDataset.html): how to generate dataset using `pyawd`
 - [`SpatioTemporalVaryingWavePropagationSpeedField.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/SpatioTemporalVaryingWavePropagationSpeedField.html): how to create a spatio-temporal varying propagation field
-
-## Related Works:
-- https://essd.copernicus.org/preprints/essd-2023-470/
 """
 from pyawd.VelocityModel import VelocityModel
 from pyawd.VelocityModel2D import VelocityModel2D

@@ -1,4 +1,4 @@
-<img src="https://github.com/pascaltribel/pyawd/blob/aca41d51f3a8aaf0028fdfc1b0637e0e545da432/Logo.png" alt="Logo" width="60%"/>
+<img src="https://github.com/pascaltribel/pyawd/raw/aca41d51f3a8aaf0028fdfc1b0637e0e545da432/Logo.png" alt="Logo" width="60%"/>
 
 # PyAWD: a Python acoustic wave propagation dataset using PyTorch and Devito
 A package for generating Pytorch datasets containing simulations of the acoustic wave propagation in custom velocity fields. 
@@ -51,7 +51,7 @@ dataset.plot_item(0)
 
 Which outputs the following figure:
 
-<img src="https://github.com/pascaltribel/pyawd/blob/8cc0547545559c3a02199e86d2cf504edf805a48/examples/example.png" alt="Example" width="60%"/>
+<img src="https://github.com/pascaltribel/pyawd/raw/8cc0547545559c3a02199e86d2cf504edf805a48/examples/example.png" alt="Example" width="60%"/>
 
 By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
 
