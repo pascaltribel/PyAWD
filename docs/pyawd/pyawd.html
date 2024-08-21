@@ -167,17 +167,20 @@ Basic help is provided for each class and function, and is accessible via the Py
 <p>Using the <code>VectorAcousticWaveDataset</code> classes, you can produce simulations which are more realistic:</p>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code><span class="n">dataset</span> <span class="o">=</span> <span class="n">VectorAcousticWaveDataset2D</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nx</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">interrogators</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span> <span class="n">t</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<pre><span></span><code><span class="n">dataset_3d</span> <span class="o">=</span> <span class="n">VectorAcousticWaveDataset3D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">interrogators</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)],</span> <span class="n">velocity_model</span><span class="o">=</span><span class="mf">300.</span><span class="p">)</span>
 </code></pre>
 </div>
 
-<p>Especially, this provides measurements along orthogonal dimensions:</p>
+<p>For visualisation, the method</p>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code><span class="n">dataset</span><span class="o">.</span><span class="n">plot_item</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">dataset</span><span class="o">.</span><span class="n">plot_interrogators_response</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<pre><span></span><code><span class="n">dataset_3d</span><span class="o">.</span><span class="n">generate_video</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;VAWD3D&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
 </code></pre>
 </div>
+
+<p>generates the following video:</p>
+
+<p><video src="https://github.com/pascaltribel/pyawd/raw/main/examples/VAND3D.mp4" width="1000" controls></video></p>
 
 <h2 id="examples">Examples</h2>
 
@@ -277,43 +280,46 @@ Basic help is provided for each class and function, and is accessible via the Py
 </span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">Using the `VectorAcousticWaveDataset` classes, you can produce simulations which are more realistic:</span>
 </span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>
 </span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">```python</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">dataset = VectorAcousticWaveDataset2D(2, nx=250, dt=2, interrogators=[(-10, 0), (10, 0)], t=10)</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">dataset_3d = VectorAcousticWaveDataset3D(1, nx=32, t=10, interrogators=[(0, 10, 15), (0, -10, 15)], velocity_model=300.)</span>
 </span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">```</span>
 </span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">Especially, this provides measurements along orthogonal dimensions:</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">For visualisation, the method</span>
 </span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>
 </span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">```python</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">dataset.plot_item(0)</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">dataset.plot_interrogators_response(0)</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">```</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">dataset_3d.generate_video(0, &quot;VAWD3D&quot;, 300)</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">```</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">generates the following video:</span>
 </span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">## Examples</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">Multiple IPython notebooks are presented in the [examples](https://github.com/pascaltribel/pyawd/tree/main/examples) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">&lt;video src=&quot;https://github.com/pascaltribel/pyawd/raw/main/examples/VAND3D.mp4&quot; width=&quot;1000&quot; controls&gt;&lt;/video&gt;</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
 </span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">```bash</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">jupyter-notebook</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">```</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">However, those are provided in HTML for your convenience. Just click on their name in the following list:</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">- [`ScalarAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/ScalarAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">- [`VectorAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the vector acoustic wave propagation</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">- [`VectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWaveDataset.html): an introduction to the VectorAcousticWaveDataset possibilities</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">- [`Marmousi.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/Marmousi.html): a visualisation of the Marmousi velocity field used in the simulations</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">- [`Interrogators.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/Interrogators.html): an introduction to the PyAWD Interrogators usage</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">- [`GenerateVectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/GenerateVectorAcousticWaveDataset.html): how to generate dataset using `pyawd`</span>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">- [`SpatioTemporalVaryingWavePropagationSpeedField.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/SpatioTemporalVaryingWavePropagationSpeedField.html): how to create a spatio-temporal varying propagation field</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="kn">from</span> <span class="nn">pyawd.VelocityModel</span> <span class="kn">import</span> <span class="n">VelocityModel</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="kn">from</span> <span class="nn">pyawd.VelocityModel2D</span> <span class="kn">import</span> <span class="n">VelocityModel2D</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="kn">from</span> <span class="nn">pyawd.VelocityModel3D</span> <span class="kn">import</span> <span class="n">VelocityModel3D</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="kn">from</span> <span class="nn">pyawd.Marmousi</span> <span class="kn">import</span> <span class="n">Marmousi</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="kn">from</span> <span class="nn">pyawd.ScalarAcousticWaveDataset</span> <span class="kn">import</span> <span class="n">ScalarAcousticWaveDataset</span>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="kn">from</span> <span class="nn">pyawd.AcousticWaveDataset</span> <span class="kn">import</span> <span class="n">AcousticWaveDataset</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="kn">from</span> <span class="nn">pyawd.VectorAcousticWaveDataset</span> <span class="kn">import</span> <span class="n">VectorAcousticWaveDataset</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="kn">from</span> <span class="nn">pyawd.VectorAcousticWaveDataset2D</span> <span class="kn">import</span> <span class="n">VectorAcousticWaveDataset2D</span>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="kn">from</span> <span class="nn">pyawd.VectorAcousticWaveDataset3D</span> <span class="kn">import</span> <span class="n">VectorAcousticWaveDataset3D</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">## Examples</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">Multiple IPython notebooks are presented in the [examples](https://github.com/pascaltribel/pyawd/tree/main/examples) directory. If [Jupyter](https://jupyter.org) is installed, those examples can be explored by starting Jupyter:</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">```bash</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">jupyter-notebook</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">```</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">However, those are provided in HTML for your convenience. Just click on their name in the following list:</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">- [`ScalarAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/ScalarAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">- [`VectorAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the vector acoustic wave propagation</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">- [`VectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWaveDataset.html): an introduction to the VectorAcousticWaveDataset possibilities</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">- [`Marmousi.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/Marmousi.html): a visualisation of the Marmousi velocity field used in the simulations</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">- [`Interrogators.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/Interrogators.html): an introduction to the PyAWD Interrogators usage</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="sd">- [`GenerateVectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/GenerateVectorAcousticWaveDataset.html): how to generate dataset using `pyawd`</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">- [`SpatioTemporalVaryingWavePropagationSpeedField.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/SpatioTemporalVaryingWavePropagationSpeedField.html): how to create a spatio-temporal varying propagation field</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="kn">from</span> <span class="nn">pyawd.VelocityModel</span> <span class="kn">import</span> <span class="n">VelocityModel</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="kn">from</span> <span class="nn">pyawd.VelocityModel2D</span> <span class="kn">import</span> <span class="n">VelocityModel2D</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="kn">from</span> <span class="nn">pyawd.VelocityModel3D</span> <span class="kn">import</span> <span class="n">VelocityModel3D</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="kn">from</span> <span class="nn">pyawd.Marmousi</span> <span class="kn">import</span> <span class="n">Marmousi</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="kn">from</span> <span class="nn">pyawd.ScalarAcousticWaveDataset</span> <span class="kn">import</span> <span class="n">ScalarAcousticWaveDataset</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="kn">from</span> <span class="nn">pyawd.AcousticWaveDataset</span> <span class="kn">import</span> <span class="n">AcousticWaveDataset</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="kn">from</span> <span class="nn">pyawd.VectorAcousticWaveDataset</span> <span class="kn">import</span> <span class="n">VectorAcousticWaveDataset</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="kn">from</span> <span class="nn">pyawd.VectorAcousticWaveDataset2D</span> <span class="kn">import</span> <span class="n">VectorAcousticWaveDataset2D</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="kn">from</span> <span class="nn">pyawd.VectorAcousticWaveDataset3D</span> <span class="kn">import</span> <span class="n">VectorAcousticWaveDataset3D</span>
 </span></pre></div>
 
 

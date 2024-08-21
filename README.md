@@ -60,15 +60,18 @@ dataset.interrogate((0, 0))
 ```
 
 ## More advanced usage
-Using the `VectorAcousticWaveDataset` class, you can produce simulations in 2D which are more realistic:
+Using the `VectorAcousticWaveDataset` classes, you can produce simulations which are more realistic:
 
 ```python
-dataset = VectorAcousticWaveDataset(2, nx=250, dt=2, interrogators=[(-10, 0), (10, 0)], t=10)
+dataset_3d = VectorAcousticWaveDataset3D(1, nx=32, t=10, interrogators=[(0, 10, 15), (0, -10, 15)], velocity_model=300.)
 ```
 
-Especially, the `interrogate` method provides measurements along two orthogonal dimensions:
+For visualisation, the method
 
 ```python
-dataset.plot_item(0)
-dataset.plot_interrogators_response(0)
+dataset_3d.generate_video(0, "VAWD3D", 300)
 ```
+
+generates the following video:
+
+<video src="https://github.com/pascaltribel/pyawd/raw/main/examples/VAND3D.mp4" width="1000" controls></video>
