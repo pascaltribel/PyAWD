@@ -81,7 +81,7 @@ dataset_3d.generate_video(0, "VAWD3D", 300)
 
 generates the following video:
 
-<video src="https://github.com/pascaltribel/pyawd/raw/main/examples/VAW3D.mp4" width="1000" controls></video>
+<video src="https://github.com/pascaltribel/pyawd/raw/main/examples/VAWD3D.mp4" width="1000" controls></video>
 
 
 ## Examples
