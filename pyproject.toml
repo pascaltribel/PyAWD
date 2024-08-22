@@ -9,7 +9,7 @@ exclude = ["upload_on_pip", "reinstall"]
 
 [project]
 name = "pyawd"
-version = "0.3.73"
+version = "0.3.74"
 authors = [{name="Tribel Pascal", email="pascal.tribel@ulb.be" }]
 description = "A Pytorch dataset for Acoustic Wave Propagation"
 readme = "README.md"
