@@ -40,7 +40,7 @@ from pyawd import *
 Let us generate a Dataset made of 10 simulations. Each simulation is run in a $250\times 250$ matrix. We store the field state every $2$ seconds and we run the simulation for $10$ seconds:
 
 ```python
-dataset = ScalarAcousticWaveDataset(2, nx=250, dt=2, t=10)
+dataset = VectorAcousticWaveDataset2D(2, nx=250, dt=2, t=10)
 ```
 
 Then we plot the first simulation. The &#128960; character shows the interrogator position:
@@ -60,7 +60,8 @@ dataset.interrogate((0, 0))
 ```
 
 ## More advanced usage
-Using the `VectorAcousticWaveDataset` classes, you can produce simulations which are more realistic:
+Using the `VectorAcousticWaveDataset3D` class allows producing simulations in 3D:
+
 
 ```python
 dataset_3d = VectorAcousticWaveDataset3D(1, nx=32, t=10, interrogators=[(0, 10, 15), (0, -10, 15)], velocity_model=300.)

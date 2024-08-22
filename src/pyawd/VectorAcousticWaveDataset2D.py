@@ -10,12 +10,13 @@ import torch
 
 from tqdm.auto import tqdm
 from pyawd import VectorAcousticWaveDataset, VelocityModel2D
-from pyawd.GenerateVideo import generate_quiver_video
+from pyawd.GenerateVideo import generate_quiver_video, generate_2d_density_video
 from pyawd.utils import create_explosive_source
 from pyawd.Marmousi import Marmousi
 
 COLORS = TABLEAU_COLORS
 dvt.configuration['log-level'] = "WARNING"
+
 
 
 class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
@@ -53,7 +54,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
             self._velocity_model = Marmousi(self.nx)
             self._display_velocity_model = True
             self.velocity_model.data[:] = self._velocity_model.get_data() * 10
-            self.max_velocities = (np.random.random(size) * 0.5 + 0.5) * 400
+            self.max_velocities = np.ones(size)
         elif isinstance(velocity_model, float) or isinstance(velocity_model, int):
             self._velocity_model = VelocityModel2D(self.nx)
             self._velocity_model.set_value(velocity_model)
@@ -184,6 +185,22 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                               filename, nx=self.nx, dt=self.ndt * self.ddt / nb_images, c=self.velocity_model,
                               max_velocity=self.max_velocities[idx], display_velocity_model=self._display_velocity_model,
                               verbose=True)
+    
+    def generate_density_video(self, idx: int, filename: str, nb_images: int):
+        """
+        Generates a video representing the simulation of the $idx^{th}$ sample propagation, by length of the arrows
+        Arguments:
+            idx (int): the number of the sample to simulate in the video
+            filename (str): the name of the video output file (without extension)
+                        The video will be stored in a file called `filename`.mp4
+            nb_images (int): the number of frames used to generate the video. This should be an entire divider of the number
+                         of points computed when applying the solving operator
+        """
+        u = self.solve_pde(idx)
+        generate_2d_density_video((u[0][::self.ndt // nb_images]**2+u[1][::self.ndt // nb_images]**2)**0.5, self.interrogators,
+                              {i: u[:, ::self.ndt // nb_images, i[0] + (self.nx // 2), i[1] + (self.nx // 2)] for i in self.interrogators},
+                              filename, nx=self.nx, dt=self.ndt * self.ddt / nb_images, c=self.velocity_model,
+                              display_velocity_model=self._display_velocity_model, verbose=True)
 
     def __getitem__(self, idx) -> Tuple:
         """

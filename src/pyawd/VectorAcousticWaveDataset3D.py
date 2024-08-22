@@ -9,7 +9,7 @@ from matplotlib.colors import TABLEAU_COLORS
 import torch
 
 from pyawd import VectorAcousticWaveDataset, VelocityModel3D
-from pyawd.GenerateVideo import generate_density_video
+from pyawd.GenerateVideo import generate_3d_density_video
 from pyawd.utils import create_explosive_source
 
 COLORS = TABLEAU_COLORS
@@ -173,7 +173,7 @@ class VectorAcousticWaveDataset3D(VectorAcousticWaveDataset):
                          of points computed when applying the solving operator
         """
         u = self.solve_pde(idx)
-        generate_density_video(u[0][::self.ndt // nb_images], u[1][::self.ndt // nb_images],
+        generate_3d_density_video(u[0][::self.ndt // nb_images], u[1][::self.ndt // nb_images],
                                u[2][::self.ndt // nb_images], self.interrogators,
                                {i: u[:, ::self.ndt // nb_images, i[0] +
                                 (self.nx // 2), i[1] + (self.nx // 2), i[2] + (self.nx // 2)]
