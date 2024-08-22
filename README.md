@@ -40,7 +40,8 @@ from pyawd import *
 Let us generate a Dataset made of 10 simulations. Each simulation is run in a $250\times 250$ matrix. We store the field state every $2$ seconds and we run the simulation for $10$ seconds:
 
 ```python
-dataset = VectorAcousticWaveDataset2D(2, nx=250, dt=2, t=10)
+dataset = VectorAcousticWaveDataset2D(2, nx=128, dt=2, t=10, velocity_model="Marmousi")
+dataset.max_velocities[0] = 500
 ```
 
 Then we plot the first simulation. The &#128960; character shows the interrogator position:
@@ -51,13 +52,15 @@ dataset.plot_item(0)
 
 Which outputs the following figure:
 
-<img src="https://github.com/pascaltribel/pyawd/raw/8cc0547545559c3a02199e86d2cf504edf805a48/examples/example.png" alt="Example" width="60%"/>
+<img src="https://github.com/pascaltribel/pyawd/raw/main/examples/example.png" alt="Example" width="60%"/>
 
-By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=dt$) can be obtained by:
+By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=ddt$) can be plot by:
 
 ```python
-dataset.interrogate((0, 0))
+dataset.plot_interrogators_response(0)
 ```
+
+<img src="https://github.com/pascaltribel/pyawd/raw/main/examples/interrogator_example.png" alt="Example" width="60%"/>
 
 ## More advanced usage
 Using the `VectorAcousticWaveDataset3D` class allows producing simulations in 3D:
