@@ -21,7 +21,7 @@ pip install pyawd
 ## Documentation
 The API documentation is available [here](https://pascaltribel.github.io/pyawd/).
 Basic help is provided for each class and function and is accessible via the Python `help()` function.
-We provide a bunch of Notebooks to start using the tool. They are presented in the [[examples](https://github.com/pascaltribel/pyawd/tree/main/examples) directory. Those are readable online:
+We provide a bunch of Notebooks to start using the tool. They are presented in the [examples](https://github.com/pascaltribel/pyawd/tree/main/examples) directory. Those are readable online:
 - [`ScalarAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/ScalarAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the scalar acoustic wave propagation
 - [`VectorAcousticWavePropagation.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWavePropagation.html): an introduction to PDE solving and simulation using Devito applied on the vector acoustic wave propagation
 - [`VectorAcousticWaveDataset.ipynb`](https://pascaltribel.github.io/pyawd/pyawd/VectorAcousticWaveDataset.html): an introduction to the VectorAcousticWaveDataset possibilities
@@ -54,7 +54,7 @@ Which outputs the following figure:
 
 <img src="https://github.com/pascaltribel/pyawd/raw/main/examples/example.png" alt="Example" width="60%"/>
 
-By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=ddt$) can be plot by:
+By default, the point `(0, 0)` contains an interrogator. This means that the continuous measurement on this position (at least with a $\Delta t=ddt$) can be plotted by:
 
 ```python
 dataset.plot_interrogators_response(0)
