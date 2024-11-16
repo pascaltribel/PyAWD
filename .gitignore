@@ -8,3 +8,6 @@ venv/
 generate_docs
 .idea/
 **/*.npy
+*.png
+*.jpg
+*.svg
