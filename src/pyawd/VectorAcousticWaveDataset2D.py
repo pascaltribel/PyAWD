@@ -53,14 +53,14 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
         if velocity_model == "Marmousi":
             self._velocity_model = Marmousi(self.nx)
             self._display_velocity_model = True
-            self.velocity_model.data[:] = self._velocity_model.get_data() * 10
-            self.max_velocities = np.ones(size)
+            self.velocity_model.data[:] = self._velocity_model.get_data()
+            self.max_velocities = ((np.random.random(size=size))+0.5) * 600
         elif isinstance(velocity_model, float) or isinstance(velocity_model, int):
             self._velocity_model = VelocityModel2D(self.nx)
             self._velocity_model.set_value(velocity_model)
             self._display_velocity_model = False
             self.velocity_model.data[:] = self._velocity_model.get_data()
-            self.max_velocities = np.ones(size)
+            self.max_velocities = ((np.random.random(size=size))+0.5)*0.1
         self.epicenters = np.random.randint(-self.nx // 2, self.nx // 2, size=(self.size, 2)).reshape(
             (self.size, 2))
 
@@ -117,7 +117,7 @@ class VectorAcousticWaveDataset2D(VectorAcousticWaveDataset):
                              scale=0.25)
             for interrogator in self.interrogators:
                 ax[i].scatter(interrogator[0] + (self.nx // 2), interrogator[1] + (self.nx // 2), marker="1",
-                              color=colors[interrogator])
+                              color=colors[interrogator], s=80)
             ax[i].set_title("t = " + str(i * (item.shape[1] // self.nt) * self.dt) + "s, \nVelocity factor = " +
                             str(max_velocity)[:5] + ", \nForce delay = " + str(f_delay)[:4] +
                             ", \nAmplitude factor = " + str(amplitude_factor)[:4] + "\nEpicenter = " + str(epicenter))
